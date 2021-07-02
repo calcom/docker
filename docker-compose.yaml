@@ -16,5 +16,7 @@ services:
       - 3000:3000
       - 5555:5555
     env_file: .env
+    depends_on:
+      - db
 volumes:
   database-data:
