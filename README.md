@@ -15,4 +15,11 @@ The Docker configuration for Calendso is an effort powered by people within the 
 Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 ## Getting Started
+
+1. Clone calendso-docker
+
+```bash
+git clone git@github.com:calendso/calendso-docker.git --recursive
+```
+
 ...
