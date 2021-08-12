@@ -1,20 +1,22 @@
 FROM node:14-alpine as deps
+
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY calendso/package.json .
+COPY calendso/package.json calendso/yarn.lock .
 COPY calendso/prisma prisma
-RUN yarn install --frozen
+RUN yarn install ---frozen-lockfile
 
 FROM node:14-alpine as builder
 WORKDIR /app
 COPY calendso .
 COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build
-RUN yarn install --production --ignore-scripts --prefer-offline
+RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 
 FROM node:14-alpine as runner
 WORKDIR /app
 ENV NODE_ENV production
 
+COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
