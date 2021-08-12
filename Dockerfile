@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY calendso/package.json calendso/yarn.lock .
 COPY calendso/prisma prisma
-RUN yarn install ---frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 FROM node:14-alpine as builder
 WORKDIR /app
