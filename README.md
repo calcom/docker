@@ -32,7 +32,7 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 4. Start prisma studio 
     ```
-    docker-compose exec calendso -- npx prisma studio
+    docker-compose exec calendso npx prisma studio
     ```
 5. Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
