@@ -21,25 +21,25 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
     ```bash
     git clone --recursive https://github.com/calendso/docker.git calendso-docker
     ```
-3. Change into the directory
+2. Change into the directory
 
     ```bash
     cd calendso-docker
     ```
-4. Update `.env` if needed 
+3. Update `.env` if needed 
 
-5. Build and start calendso
+4. Build and start calendso
 
     ```
     docker-compose up --build
     ```
 
-6. Start prisma studio 
+5. Start prisma studio 
     ```
     docker-compose exec calendso npx prisma studio
     ```
-7. Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
+6. Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
-8. Click on the `User` model to add a new user record.
-9.  Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
-10. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
+7. Click on the `User` model to add a new user record.
+8.  Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
+9. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
