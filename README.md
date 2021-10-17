@@ -3,7 +3,7 @@
   <a href="https://github.com/calendso/calendso">
     <img src="https://cal.com/logo.svg" alt="Logo" width="160" height="65">
   </a><br/>
-  <a href="https://calendso.com">Website</a>
+  <a href="https://cal.com">Website</a>
   ·
   <a href="https://github.com/calendso/calendso-docker/issues">Community Support</a>
 </div>
