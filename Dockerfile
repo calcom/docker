@@ -1,28 +1,32 @@
 FROM node:14-alpine as deps
 
 RUN apk add --no-cache libc6-compat
+RUN mkdir app
+COPY calendso/package.json calendso/yarn.lock /app/
+COPY calendso/prisma /app/prisma
 WORKDIR /app
-COPY calendso/package.json calendso/yarn.lock ./
-COPY calendso/prisma prisma
-RUN yarn install --frozen-lockfile
+RUN ls
+RUN yarn install
 
 FROM node:14-alpine as builder
+COPY calendso /app
+COPY --from=deps /app/node_modules /app/node_modules
 WORKDIR /app
-COPY calendso .
-COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
+# RUN yarn install
 
 FROM node:14-alpine as runner
-WORKDIR /app
 ENV NODE_ENV production
 
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/next-i18next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
-COPY  scripts scripts
+# copy all files
+COPY --from=builder /app /app
+COPY .env /app/.env
+# COPY --from=builder /app/next.config.js ./
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/.next ./.next
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/package.json ./package.json
+# COPY --from=builder /app/prisma ./prisma
+COPY  scripts /app/scripts
+WORKDIR /app
 EXPOSE 3000
 CMD ["/app/scripts/start.sh"]

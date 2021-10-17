@@ -1,14 +1,17 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: '3.6'
 services:
   db:
-    image: postgres
+    image: postgres:13
     restart: always
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     env_file: .env
+    environment:
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - 5432:5432
+      - 5450:5432
   calendso:
     build: .
     restart: always
@@ -19,4 +22,4 @@ services:
     depends_on:
       - db
 volumes:
-  database-data:
+  db_data:

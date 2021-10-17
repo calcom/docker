@@ -2,5 +2,6 @@
 set -x
 
 /app/scripts/wait-for-it.sh ${DATABASE_HOST} -- echo "db is up"
-npx prisma migrate deploy
+npx prisma db push
+yarn build
 yarn start
