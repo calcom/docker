@@ -31,8 +31,6 @@ jobs:
       packages: write
 
     steps:
-      - name: include stub submodule to base repo
-        run: git submodule update --recursive --remote --init
       - name: clone calendso repo
         shell: bash
         run: |
