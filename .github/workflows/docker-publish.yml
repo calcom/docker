@@ -32,7 +32,12 @@ jobs:
 
     steps:
       - name: include stub submodule to base repo
-        run: git submodule update --init
+        run: git submodule update --recursive --remote --init
+      - name: clone calendso repo
+        shell: bash
+        run: |
+          cd ../../_actions/kelvinalfaro/docker/master
+          git clone https://github.com/kelvinalfaro/calendso.git
       - name: Checkout repository
         uses: actions/checkout@v2
 
