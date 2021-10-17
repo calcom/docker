@@ -31,6 +31,8 @@ jobs:
       packages: write
 
     steps:
+      - name: include stub submodule to base repo
+        run: git submodule update --init
       - name: Checkout repository
         uses: actions/checkout@v2
 
