@@ -31,8 +31,8 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v2 # checkout root
       - name: Checkout submodules # checkout rest
+      - uses: actions/checkout@v2 # checkout root
         with:
          submodules: recursive
 
