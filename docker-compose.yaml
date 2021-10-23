@@ -1,25 +1,24 @@
 # Use postgres/example user/password credentials
+# starts a postgres instance on port 5450 to use as a local db
 version: '3.6'
 services:
   db:
     image: postgres:13
     restart: always
+    ports:
+      - 5450:5432 # expose pg on port 5450 to not collide with pg from elswhere
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file: .env
     environment:
       POSTGRES_PASSWORD: ""
       POSTGRES_HOST_AUTH_METHOD: trust
-    ports:
-      - 5450:5432
   calendso:
     build: .
     restart: always
     ports:
       - 3000:3000
       - 5555:5555
+    volumes:
+      db_data:
     env_file: .env
-    depends_on:
-      - db
-volumes:
-  db_data:
