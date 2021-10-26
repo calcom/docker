@@ -6,16 +6,19 @@ services:
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
-    env_file: .env
     ports:
       - 5432:5432
   calendso:
-    build: .
+    build:
+      target: "base"
     restart: always
     ports:
       - 3000:3000
       - 5555:5555
     env_file: .env
+    command: sh -c "npx prisma migrate reset --force && yarn db-seed && yarn dev"
+    environment:
+      - NODE_ENV=development
     depends_on:
       - db
 volumes:
