@@ -26,7 +26,7 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
     ```bash
     cd calendso-docker
     ```
-3. Update `.env` if needed 
+3. Rename `.env.example` to `.env` and update `.env` if needed.
 
 4. Build and start calendso
 
