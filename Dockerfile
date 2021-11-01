@@ -30,4 +30,4 @@ COPY .env /app/.env
 COPY  scripts /app/scripts
 WORKDIR /app
 EXPOSE 3000
-CMD ["/app/scripts/start.sh"]
+CMD ["sh", "/app/scripts/start.sh"]
