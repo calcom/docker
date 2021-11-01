@@ -21,13 +21,13 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 1. Clone calendso-docker
 
     ```bash
-    git clone --recursive https://github.com/kelvinalfaro/docker.git cal-docker
+    git clone --recursive https://github.com/calendso/docker.git calendso-docker
     ```
 
 2. Change into the directory
 
     ```bash
-    cd cal-docker
+    cd calendso-docker
     ```
 
 3. Update `.env` if needed
