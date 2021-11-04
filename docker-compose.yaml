@@ -16,6 +16,8 @@ services:
       - 3000:3000
       - 5555:5555
     env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:
       - db
 volumes:
