@@ -6,7 +6,7 @@ COPY calendso/package.json calendso/yarn.lock ./
 COPY calendso/prisma prisma
 RUN yarn install --frozen-lockfile
 
-FROM node:14-alpine as builder
+FROM node:14 as builder
 WORKDIR /app
 COPY calendso .
 COPY --from=deps /app/node_modules ./node_modules
