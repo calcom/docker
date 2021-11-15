@@ -1,28 +1,20 @@
-FROM node:14-alpine as deps
-
-RUN apk add --no-cache libc6-compat
+# Install Dependencies
+FROM node:14 as builder
 WORKDIR /app
-COPY calendso/package.json calendso/yarn.lock ./
+COPY calendso/package.json calendso/yarn.lock .
 COPY calendso/prisma prisma
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
-FROM node:14-alpine as builder
+# Build Cal Image
+FROM node:14
 WORKDIR /app
+COPY --from=builder /app .
 COPY calendso .
-COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
-
-FROM node:14-alpine as runner
-WORKDIR /app
-ENV NODE_ENV production
-
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/next-i18next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
-COPY  scripts scripts
+COPY scripts scripts
+RUN wget -t 3 -qO- https://cli.doppler.com/install.sh | sh -s -- --verify-signature
 EXPOSE 3000
-CMD ["/app/scripts/start.sh"]
+ENTRYPOINT  if [ -z "$DOPPLER_TOKEN" ]; then         \
+              /app/scripts/start.sh;                 \
+            else                                     \
+              doppler run -- /app/scripts/start.sh;  \
+            fi

@@ -20,29 +20,31 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 1. Clone calendso-docker
 
-    ```bash
-    git clone --recursive https://github.com/calendso/docker.git calendso-docker
-    ```
+   ```bash
+   git clone --recursive https://github.com/calendso/docker.git calendso-docker
+   ```
 
 2. Change into the directory
 
-    ```bash
-    cd calendso-docker
-    ```
+   ```bash
+   cd calendso-docker
+   ```
 
-3. Rename `.env.example` to `.env` and update `.env` if needed.
+3. Rename `.env.example` to `.env` and update if needed.
+   For local development and production use-cases, jump to the [Secrets Management](#secrets-management) section.
+   **We strongly encourage using a secrets manager to securely store secrets. ENV files lead to accidental leaks and breaches.**
 
 4. Build and start calendso
 
-    ```bash
-    docker-compose up --build
-    ```
+   ```bash
+   docker-compose up --build
+   ```
 
 5. Start prisma studio
 
-    ```bash
-    docker-compose exec calendso npx prisma studio
-    ```
+   ```bash
+   docker-compose exec calendso npx prisma studio
+   ```
 
 6. Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
@@ -52,6 +54,26 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 9. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
 
+## Secrets Management
+
+We strongly recommend using [Doppler](https://doppler.com) to securely store and manage secrets across devices, environments, and team members.
+
+1. Import our project to get setup.
+
+   <a href="https://dashboard.doppler.com/workplace/template/import?template=https://github.com/calendso/docker/blob/main/doppler.yaml"/>
+      <img src="https://raw.githubusercontent.com/DopplerUniversity/app-config-templates/main/doppler-button.svg" alt="Import to Doppler" />
+   </a>
+
+2. Create a service token.
+
+   ![create-service-token](https://user-images.githubusercontent.com/1920007/141717862-a524c1ad-9384-4f40-909f-4d293e4889e2.gif)
+
+3. Build and start calendso with Doppler
+
+   ```bash
+   DOPPLER_TOKEN=dp.st.XXXXXXX docker-compose up --build
+   ```
+
 ## Git Submodules
 
 This repository uses a git submodule.
@@ -60,14 +82,14 @@ If you cloned the repository without using `--recursive`, then you can initializ
 
 1. Init the submodule
 
-    ```bash
-    git submodule init
-    ```
+   ```bash
+   git submodule init
+   ```
 
 2. Update the submodule
 
-    ```bash
-    git submodule update --remote
-    ```
+   ```bash
+   git submodule update --remote
+   ```
 
 For more advanced usage, please refer to the git documentation: [https://git-scm.com/book/en/v2/Git-Tools-Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)

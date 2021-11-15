@@ -1,12 +1,15 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: "3.1"
 services:
   db:
     image: postgres
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
-    env_file: .env
+    environment:
+      POSTGRES_USER: "unicorn_user"
+      POSTGRES_PASSWORD: "magical_password"
+      POSTGRES_DB: "cal"
     ports:
       - 5432:5432
   calendso:
@@ -15,9 +18,8 @@ services:
     ports:
       - 3000:3000
       - 5555:5555
-    env_file: .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DOPPLER_TOKEN
     depends_on:
       - db
 volumes:

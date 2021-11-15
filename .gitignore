@@ -2,3 +2,4 @@
 
 # .env file
 .env
+node_modules/

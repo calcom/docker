@@ -1,0 +1,77 @@
+projects:
+  - name: "cal"
+    description: "Cal.com configuration and secrets"
+    environments:
+      - name: "Development"
+        slug: "dev"
+        configs:
+          - slug: "dev"
+
+      - name: "Production"
+        slug: "prd"
+        configs:
+          - slug: "prd"
+    secrets:
+      dev:
+        NODE_ENV: "development"
+        DATABASE_HOST: "db:5432"
+        DATABASE_URL: "postgresql://unicorn_user:magical_password@${DATABASE_HOST}/cal"
+        GOOGLE_API_CREDENTIALS: "secret"
+        BASE_URL: "http://localhost:3000"
+        NEXTAUTH_URL: "http://localhost:3000"
+
+        # Remove this var if you don't want Calendso to collect anonymous usage
+        NEXT_PUBLIC_TELEMETRY_KEY: "js.2pvs2bbpqq1zxna97wcml.oi2jzirnbj1ev4tc57c5r"
+
+        # Used for the Office 365 / Outlook.com Calendar integration
+        MS_GRAPH_CLIENT_ID: ""
+        MS_GRAPH_CLIENT_SECRET: ""
+
+        # Used for the Zoom integration
+        ZOOM_CLIENT_ID: ""
+        ZOOM_CLIENT_SECRET: ""
+
+        # E-mail settings
+        # Configures the global From: header whilst sending emails.
+        EMAIL_FROM: "notifications@example.com"
+
+        # Configure SMTP settings (@see https://nodemailer.com/smtp/).
+        EMAIL_SERVER_HOST: "smtp.example.com"
+        EMAIL_SERVER_PORT: "587"
+        EMAIL_SERVER_USER: "email_user"
+        EMAIL_SERVER_PASSWORD: "email_password"
+
+        # Encryption key that will be used to encrypt CalDAV credentials, choose a random string, for example with `dd if=/dev/urandom bs=1K count=1 | md5sum`
+        CALENDSO_ENCRYPTION_KEY: ""
+
+      prd:
+        NODE_ENV: "production"
+        DATABASE_HOST: ""
+        DATABASE_URL: ""
+        GOOGLE_API_CREDENTIALS: "secret"
+        BASE_URL: ""
+        NEXTAUTH_URL: ""
+
+        # Remove this var if you don't want Calendso to collect anonymous usage
+        NEXT_PUBLIC_TELEMETRY_KEY: "js.2pvs2bbpqq1zxna97wcml.oi2jzirnbj1ev4tc57c5r"
+
+        # Used for the Office 365 / Outlook.com Calendar integration
+        MS_GRAPH_CLIENT_ID: ""
+        MS_GRAPH_CLIENT_SECRET: ""
+
+        # Used for the Zoom integration
+        ZOOM_CLIENT_ID: ""
+        ZOOM_CLIENT_SECRET: ""
+
+        # E-mail settings
+        # Configures the global From: header whilst sending emails.
+        EMAIL_FROM: "notifications@example.com"
+
+        # Configure SMTP settings (@see https://nodemailer.com/smtp/).
+        EMAIL_SERVER_HOST: "smtp.example.com"
+        EMAIL_SERVER_PORT: "587"
+        EMAIL_SERVER_USER: "email_user"
+        EMAIL_SERVER_PASSWORD: "email_password"
+
+        # Encryption key that will be used to encrypt CalDAV credentials, choose a random string, for example with `dd if=/dev/urandom bs=1K count=1 | md5sum`
+        CALENDSO_ENCRYPTION_KEY: ""
