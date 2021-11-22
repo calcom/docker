@@ -25,6 +25,7 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:
       - db
+# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
     image: calendso/docker
     restart: always
@@ -39,5 +40,6 @@ services:
       - npx
       - prisma
       - studio
+# END SECTION: Optional use of Prisma Studio.
 volumes:
   database-data:
