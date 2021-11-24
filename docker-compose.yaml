@@ -10,15 +10,36 @@ services:
     ports:
       - 5432:5432
   calendso:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BASE_URL=${BASE_URL}
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+    image: calendso/docker
     restart: always
     ports:
       - 3000:3000
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+    depends_on:
+      - db
+# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
+  studio:
+    image: calendso/docker
+    restart: always
+    ports:
       - 5555:5555
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:
       - db
+    command:
+      - npx
+      - prisma
+      - studio
+# END SECTION: Optional use of Prisma Studio.
 volumes:
   database-data:
