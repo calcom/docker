@@ -25,7 +25,7 @@ services:
       args:
         - BASE_URL=${BASE_URL}
         - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-    image: calendso/docker
+    image: calendso/calendso:latest
     restart: always
     networks:
       - stack
@@ -39,7 +39,7 @@ services:
 
 # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
-    image: calendso/docker
+    image: calendso/calendso:latest
     restart: always
     networks:
       - stack
