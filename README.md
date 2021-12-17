@@ -8,9 +8,17 @@
   <a href="https://github.com/calendso/calendso-docker/issues">Community Support</a>
 </div>
 
-# calendso-docker
+# Docker
 
 The Docker configuration for Calendso is an effort powered by people within the community. Calendso does not provide official support for Docker, but we will accept fixes and documentation. Use at your own risk.
+
+## Important Notes
+
+This Docker Image is managed by the Calendso Community. Support for this image can be found via the repository, located at [https://github.com/calendso/docker](https://github.com/calendso/docker)
+
+Currently, this image is intended for local development/evaluation use only, as there are specific requirements for providing environmental variables at build-time in order to specify a non-localhost BASE_URL. (this is due to the nature of the static site compilation, which embeds the variable values). The ability to update these variables at runtime is in-progress and will be available in the future.
+
+For Production, for the time being, please checkout the repository and build/push your own image privately.
 
 ## Requirements
 
