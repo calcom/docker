@@ -3,7 +3,10 @@
 name: Build and push image to DockerHub
 
 # Controls when the workflow will run
-on: push
+on:
+  push:
+    branches:
+      - main
 
 # Leaving in example for releases. Initially we simply push to 'latest'
 # on:
