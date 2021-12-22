@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "calendso-chart.fullname" . }}
+  labels:
+    {{- include "calendso-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "calendso-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "calendso-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "calendso-chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: "NEXT_PUBLIC_LICENSE_CONSENT"
+            #value: {{ .Values.environment.NEXT_PUBLIC_LICENSE_CONSENT}}
+            value: 'agree'
+          - name: "DATABASE_URL"
+            value: {{ .Values.environment.DATABASE_URL}}
+          - name: "GOOGLE_API_CREDENTIALS"
+            value: '{"web":{"client_id":"159784501846-431cp70nri2792gio1mthhi3d05103lb.apps.googleusercontent.com","project_id":"calendso-project-333113","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://calendso.connect.dev.promotal.com/api/integrations/googlecalendar/callback"]}}'
+          - name: "BASE_URL"
+            value: {{ .Values.environment.BASE_URL}}
+          - name: "NEXT_PUBLIC_APP_URL"
+            value: {{ .Values.environment.NEXT_PUBLIC_APP_URL}}
+          - name: "JWT_SECRET"
+            value: {{ .Values.environment.JWT_SECRET}}
+          - name: "NEXT_PUBLIC_TELEMETRY_KEY"
+            value: {{ .Values.environment.NEXT_PUBLIC_TELEMETRY_KEY}}
+          - name: "MS_GRAPH_CLIENT_ID"
+            value: {{ .Values.environment.MS_GRAPH_CLIENT_ID}}
+          - name: "MS_GRAPH_CLIENT_SECRET"
+            value: {{ .Values.environment.MS_GRAPH_CLIENT_SECRET}}
+          - name: "ZOOM_CLIENT_ID"
+            value: {{ .Values.environment.ZOOM_CLIENT_ID}}
+          - name: "ZOOM_CLIENT_SECRET"
+            value: {{ .Values.environment.ZOOM_CLIENT_SECRET}}
+          - name: "DAILY_API_KEY"
+            value: {{ .Values.environment.DAILY_API_KEY}}
+          - name: "EMAIL_FROM"
+            value: {{ .Values.environment.EMAIL_FROM}}
+          - name: "EMAIL_SERVER_HOST"
+            value: {{ .Values.environment.EMAIL_SERVER_HOST}}
+          - name: "EMAIL_SERVER_PORT"
+            value: {{ .Values.environment.EMAIL_SERVER_PORT}}
+          - name: "EMAIL_SERVER_USER"
+            value: {{ .Values.environment.EMAIL_SERVER_USER}}
+          - name: "EMAIL_SERVER_PASSWORD"
+            value: {{ .Values.environment.EMAIL_SERVER_PASSWORD}}
+          - name: "CRON_API_KEY"
+            value: {{ .Values.environment.CRON_API_KEY}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
