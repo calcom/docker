@@ -58,7 +58,7 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 7. Click on the `User` model to add a new user record.
 
-8. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
+8. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/) and filling metadata with empty json instead of null) and click `Save 1 Record` to create your first user.
 
 9. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
 
