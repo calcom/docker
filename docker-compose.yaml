@@ -36,8 +36,12 @@ services:
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - NODE_ENV=development
     depends_on:
       - database
+    volumes:
+      - "./calendso:/app/"
+      - "./scripts:/app/scripts"
 
 # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
