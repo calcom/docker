@@ -58,7 +58,7 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 
 7. Click on the `User` model to add a new user record.
 
-8. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/) and filling metadata with empty json instead of null) and click `Save 1 Record` to create your first user.
+8. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
 
 9. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
 
@@ -85,3 +85,4 @@ For more advanced usage, please refer to the git documentation: [https://git-scm
 ## Troubleshooting
 
 * SSL edge termination: If running behind a load balancer which handles SSL certificates, you will need to add the environmental variable `NODE_TLS_REJECT_UNAUTHORIZED=0` to prevent requests from being rejected. Only do this if you know what you are doing and trust the services/load-balancers directing traffic to your service.
+* If you had and issue creating user please check if the metadata field is null change it to empty json ({}) and you will be fine.
