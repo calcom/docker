@@ -32,7 +32,7 @@ services:
     networks:
       - stack
     ports:
-      - 3000:3000
+       - ${PORT-3000}:3000
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
