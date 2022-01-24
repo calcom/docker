@@ -8,7 +8,7 @@
   <a href="https://github.com/calendso/calendso-docker/issues">Community Support</a>
 </div>
 
-# calendso-docker
+# Docker
 
 This image can be found on DockerHub at [https://hub.docker.com/repository/docker/calendso/calendso](https://hub.docker.com/repository/docker/calendso/calendso)
 
