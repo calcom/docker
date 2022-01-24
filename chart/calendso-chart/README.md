@@ -30,7 +30,7 @@
 | `image.repository` | Image repository | `quay.io/jetstack/cert-manager-controller` |
 | `image.tag` | Image tag | `v0.6.2` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `replicaCount`  | Number of cert-manager replicas  | `1` |
+| `replicaCount`  | Number of cal.com replicas  | `1` |
 | `DATABASE_URL` | Reference to the url of the database | `[]` |
 | `BASE_URL` | Reference to the url of calendso application after its installation | `[]` |
 | `GOOGLE_API_CREDENTIALS` | Reference to Google API credentials. You can get this from https://console.cloud.google.com/apis/dashboard | `[]` |
