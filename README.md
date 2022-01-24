@@ -10,6 +10,8 @@
 
 # calendso-docker
 
+This image can be found on DockerHub at [https://hub.docker.com/repository/docker/calendso/calendso](https://hub.docker.com/repository/docker/calendso/calendso)
+
 The Docker configuration for Calendso is an effort powered by people within the community. Calendso does not provide official support for Docker, but we will accept fixes and documentation. Use at your own risk.
 
 ## Requirements
@@ -74,7 +76,7 @@ For more advanced usage, please refer to the git documentation: [https://git-scm
 
 ## Helm and K8S
 
-Please read the [helm chart readme](chart\calendso-chart\README.md) for more informations
+Please read the [Helm Chart README](./chart/calendso-chart/README.md) for more informations
 
 
 ## Troubleshooting

@@ -54,7 +54,7 @@ spec:
           - name: "DATABASE_URL"
             value: {{ .Values.environment.DATABASE_URL}}
           - name: "GOOGLE_API_CREDENTIALS"
-            value: '{"web":{"client_id":"159784501846-431cp70nri2792gio1mthhi3d05103lb.apps.googleusercontent.com","project_id":"calendso-project-333113","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["https://calendso.connect.dev.promotal.com/api/integrations/googlecalendar/callback"]}}'
+            value: {{ .Values.environment.GOOGLE_API_CREDENTIALS}}
           - name: "BASE_URL"
             value: {{ .Values.environment.BASE_URL}}
           - name: "NEXT_PUBLIC_APP_URL"
