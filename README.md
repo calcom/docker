@@ -86,3 +86,23 @@ For more advanced usage, please refer to the git documentation: [https://git-scm
 
 * SSL edge termination: If running behind a load balancer which handles SSL certificates, you will need to add the environmental variable `NODE_TLS_REJECT_UNAUTHORIZED=0` to prevent requests from being rejected. Only do this if you know what you are doing and trust the services/load-balancers directing traffic to your service.
 * Failed to commit changes: Invalid 'prisma.user.create()': Certain versions may have trouble creating a user if the field `metadata` is empty. Using an empty json object `{}` as the field value should resolve this issue. Also, the `id` field will autoincrement, so you may also try leaving the value of `id` as empty.
+
+## Docker secrets
+
+As an alternative to passing sensitive information via environment variables, _FILE may be appended to the environment variables listed below, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in /run/secrets/<secret_name> files. 
+
+
+* CALENDSO_ENCRYPTION_KEY
+* EMAIL_SERVER_PASSWORD
+* GOOGLE_API_CREDENTIALS
+* JWT_SECRET
+* MS_GRAPH_CLIENT_SECRET
+* POSTGRES_PASSWORD
+* ZOOM_CLIENT_SECRET
+
+The `DATABASE_URL` environment variable can be omitted; it will be computed automatically based on the values of the following environment variables (or their `_FILE` replacements):
+
+* POSTGRES_USER
+* POSTGRES_PASSWORD
+* DATABASE_HOST
+* POSTGRES_DB
