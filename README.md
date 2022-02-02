@@ -45,7 +45,7 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
 4. Build and start calendso
 
     ```bash
-    docker-compose up --build
+    docker-compose up --build -d
     ```
 
 5. Start prisma studio
