@@ -2,7 +2,7 @@ FROM node:14 as deps
 
 WORKDIR /app
 COPY calendso/package.json calendso/yarn.lock ./
-COPY calendso/prisma prisma
+COPY calendso/apps/web/prisma prisma
 RUN yarn install --frozen-lockfile
 
 FROM node:14 as builder
@@ -28,11 +28,11 @@ ENV NODE_ENV production
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/scripts ./scripts
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/next-i18next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/apps/web/scripts ./scripts
+COPY --from=builder /app/apps/web/next.config.js ./
+COPY --from=builder /app/apps/web/next-i18next.config.js ./
+COPY --from=builder /app/apps/web/public ./public
+COPY --from=builder /app/apps/web/.next ./.next
 COPY --from=builder /app/package.json ./package.json
 COPY  scripts scripts
 
