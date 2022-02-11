@@ -1,8 +1,8 @@
 FROM node:14 as deps
 
 WORKDIR /app
-COPY calendso/package.json calendso/yarn.lock ./
-COPY calendso/prisma prisma
+COPY calendso/apps/web/package.json calendso/yarn.lock ./
+COPY calendso/apps/web/prisma prisma
 RUN yarn install --frozen-lockfile
 
 FROM node:14 as builder
@@ -17,7 +17,7 @@ ENV BASE_URL=$BASE_URL \
     NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
     NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
     
-COPY calendso .
+COPY calendso/apps/web .
 
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
