@@ -30,7 +30,10 @@ RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 FROM node:14 as runner
 WORKDIR /calcom
 ENV NODE_ENV production
-RUN apt-get update && apt-get -y install netcat && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install --global prisma
 
 COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY --from=builder /calcom/node_modules ./node_modules
