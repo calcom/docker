@@ -20,6 +20,7 @@ COPY calendso/packages/app-store/jitsivideo/package.json ./packages/app-store/ji
 COPY calendso/packages/app-store/stripepayment/package.json ./packages/app-store/stripepayment/package.json
 COPY calendso/packages/app-store/office365video/package.json ./packages/app-store/office365video/package.json
 COPY calendso/packages/app-store/office365calendar/package.json ./packages/app-store/office365calendar/package.json
+COPY calendso/packages/app-store/slackmessaging/package.json ./packages/app-store/slackmessaging/package.json
 COPY calendso/packages/app-store/tandemvideo/package.json ./packages/app-store/tandemvideo/package.json
 COPY calendso/packages/app-store/package.json ./packages/app-store/package.json
 COPY calendso/packages/app-store/_example/package.json ./packages/app-store/_example/package.json
