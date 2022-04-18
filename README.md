@@ -12,7 +12,7 @@
 
 This image can be found on DockerHub at [https://hub.docker.com/repository/docker/calendso/calendso](https://hub.docker.com/repository/docker/calendso/calendso)
 
-The Docker configuration for Calendso is an effort powered by people within the community. Calendso does not provide official support for Docker, but we will accept fixes and documentation. Use at your own risk.
+The Docker configuration for Calendso is an effort powered by people within the community. Cal.com, Inc. does not provide official support for Docker, but we will accept fixes and documentation. Use at your own risk.
 
 ## Important Notes
 
