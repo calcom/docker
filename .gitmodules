@@ -1,4 +1,4 @@
 [submodule "calendso"]
-	path = calendso
+	path = calcom
 	url = https://github.com/calcom/cal.com.git
 	branch = main
