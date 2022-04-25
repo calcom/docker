@@ -24,7 +24,9 @@ For Production, for the time being, please checkout the repository and build/pus
 
 ## Requirements
 
-Make sure you have `docker` & `docker-compose` installed on the server / system.
+Make sure you have `docker` & `docker compose` installed on the server / system.
+
+Note: `docker compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
 
 ## Getting Started
 
@@ -40,45 +42,46 @@ Make sure you have `docker` & `docker-compose` installed on the server / system.
     cd calendso-docker
     ```
 
-3. Rename `.env.example` to `.env` and update `.env` if needed.
-
-4. Build and start calendso
+3. Update the calcom submodule
 
     ```bash
-    docker-compose up --build
+    git submodule update --remote --init
     ```
 
-5. Start prisma studio
+4. Rename `.env.example` to `.env` and then update `.env`
+
+5. Build and start calendso
 
     ```bash
-    docker-compose exec calendso npx prisma studio
+    docker compose up --build
     ```
 
-6. Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
+6. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
-7. Click on the `User` model to add a new user record.
+    a. Click on the `User` model to add a new user record.
 
-8. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
+    b. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
 
-9. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
+7. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
 
+## Configuration
+
+### Build-time variables
+
+placeholder
+
+### Run-time variables
+
+placeholder
 ## Git Submodules
 
 This repository uses a git submodule.
 
-If you cloned the repository without using `--recursive`, then you can initialize and clone the submodule with the following steps.
+To update the calcom submodule, use the following command:
 
-1. Init the submodule
-
-    ```bash
-    git submodule init
-    ```
-
-2. Update the submodule
-
-    ```bash
-    git submodule update --remote
-    ```
+```bash
+git submodule update --remote --init
+```
 
 For more advanced usage, please refer to the git documentation: [https://git-scm.com/book/en/v2/Git-Tools-Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
