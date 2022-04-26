@@ -68,10 +68,9 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 ### Build-time variables
 
-These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Changing these is not required for evaluation, but may be required for running in producion.
+These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Changing these is not required for evaluation, but may be required for running in production. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-* BASE_URL
-* NEXT_PUBLIC_APP_URL
+* NEXT_PUBLIC_WEBAPP_URL
 * NEXT_PUBLIC_LICENSE_CONSENT
 * NEXT_PUBLIC_TELEMETRY_KEY
 
