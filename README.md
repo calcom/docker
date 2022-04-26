@@ -74,9 +74,9 @@ These variables must be provided at the time of the docker build, and can be pro
 * NEXT_PUBLIC_LICENSE_CONSENT
 * NEXT_PUBLIC_TELEMETRY_KEY
 
-### Run-time variables
+### Important Run-time variables
 
-placeholder
+* NEXTAUTH_SECRET
 
 ## Git Submodules
 
