@@ -1,22 +1,24 @@
 <!-- PROJECT LOGO -->
 <div align="right">
-  <a href="https://github.com/calendso/calendso">
+  <a href="https://github.com/calcom/cal.com">
     <img src="https://cal.com/logo.svg" alt="Logo" width="160" height="65">
   </a><br/>
   <a href="https://cal.com">Website</a>
   ·
-  <a href="https://github.com/calendso/calendso-docker/issues">Community Support</a>
+  <a href="https://github.com/calcom/docker/issues">Community Support</a>
 </div>
 
 # Docker
 
+NOTE: DockerHub organization has not yet been renamed.
+
 This image can be found on DockerHub at [https://hub.docker.com/r/calendso/calendso](https://hub.docker.com/r/calendso/calendso)
 
-The Docker configuration for Calendso is an effort powered by people within the community. Cal.com, Inc. does not provide official support for Docker, but we will accept fixes and documentation. Use at your own risk.
+The Docker configuration for Cal.com is an effort powered by people within the community. Cal.com, Inc. does not yet provide official support for Docker, but we will accept fixes and documentation at this time. Use at your own risk.
 
 ## Important Notes
 
-This Docker Image is managed by the Calendso Community. Support for this image can be found via the repository, located at [https://github.com/calendso/docker](https://github.com/calcom/docker)
+This Docker Image is managed by the Cal.com Community. Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
 
 Currently, this image is intended for local development/evaluation use only, as there are specific requirements for providing environmental variables at build-time in order to specify a non-localhost BASE_URL. (this is due to the nature of the static site compilation, which embeds the variable values). The ability to update these variables at runtime is in-progress and will be available in the future.
 
@@ -30,16 +32,16 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 ## Getting Started
 
-1. Clone calendso-docker
+1. Clone calcom-docker
 
     ```bash
-    git clone --recursive https://github.com/calendso/docker.git calendso-docker
+    git clone --recursive https://github.com/calcom/docker.git calcom-docker
     ```
 
 2. Change into the directory
 
     ```bash
-    cd calendso-docker
+    cd calcom-docker
     ```
 
 3. Update the calcom submodule
@@ -50,7 +52,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 4. Rename `.env.example` to `.env` and then update `.env`
 
-5. Build and start calendso
+5. Build and start Cal.com via docker compose
 
     ```bash
     docker compose up --build
