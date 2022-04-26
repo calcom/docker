@@ -3,7 +3,7 @@ FROM node:14 as deps
 WORKDIR /calcom
 
 # Copy rootand all workspace package.json files
-COPY calendso/package.json calendso/yarn.lock ./
+COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY calendso/apps/web/package.json calendso/apps/web/yarn.lock ./apps/web/
 COPY calendso/packages/ui/package.json ./packages/ui/package.json
 COPY calendso/packages/types/package.json ./packages/types/package.json
@@ -22,11 +22,13 @@ COPY calendso/packages/app-store/office365video/package.json ./packages/app-stor
 COPY calendso/packages/app-store/office365calendar/package.json ./packages/app-store/office365calendar/package.json
 COPY calendso/packages/app-store/slackmessaging/package.json ./packages/app-store/slackmessaging/package.json
 COPY calendso/packages/app-store/tandemvideo/package.json ./packages/app-store/tandemvideo/package.json
+COPY calendso/packages/app-store/wipemycalother/package.json ./packages/app-store/wipemycalother/package.json
 COPY calendso/packages/app-store/package.json ./packages/app-store/package.json
 COPY calendso/packages/app-store/_example/package.json ./packages/app-store/_example/package.json
 COPY calendso/packages/app-store/googlecalendar/package.json ./packages/app-store/googlecalendar/package.json
 COPY calendso/packages/app-store/dailyvideo/package.json ./packages/app-store/dailyvideo/package.json
 COPY calendso/packages/app-store/applecalendar/package.json ./packages/app-store/applecalendar/package.json
+COPY calendso/packages/app-store/hubspotothercalendar/package.json ./packages/app-store/hubspotothercalendar/package.json
 COPY calendso/packages/lib/package.json ./packages/lib/package.json
 COPY calendso/packages/embeds/embed-snippet/package.json ./packages/embeds/embed-snippet/package.json
 COPY calendso/packages/embeds/embed-react/package.json ./packages/embeds/embed-react/package.json
