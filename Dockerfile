@@ -44,11 +44,15 @@ RUN yarn install --frozen-lockfile
 FROM node:14 as builder
 
 WORKDIR /calcom
-ARG BASE_URL
-ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_WEBAPP_URL
 ARG NEXT_PUBLIC_LICENSE_CONSENT
 ARG NEXT_PUBLIC_TELEMETRY_KEY
-ENV BASE_URL=$BASE_URL \
+# DEPRECATED
+ARG BASE_URL
+ARG NEXT_PUBLIC_APP_URL
+
+ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
+    BASE_URL=$BASE_URL \
     NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
     NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
@@ -77,6 +81,7 @@ COPY --from=builder /calcom/apps/web/next-i18next.config.js ./apps/web/next-i18n
 COPY --from=builder /calcom/apps/web/public ./apps/web/public
 COPY --from=builder /calcom/apps/web/.next ./apps/web/.next
 COPY --from=builder /calcom/apps/web/package.json ./apps/web/package.json
+COPY --from=builder calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
 COPY scripts scripts
 
 EXPOSE 3000
