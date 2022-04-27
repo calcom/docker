@@ -18,13 +18,12 @@ services:
     networks:
       - stack
 
-  calendso:
+  calcom:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - BASE_URL=${BASE_URL}
-        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+        - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
         - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
         - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
     restart: always
