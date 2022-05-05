@@ -35,7 +35,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 1. Clone calcom-docker
 
     ```bash
-    git clone --recursive https://github.com/calcom/docker.git calcom-docker
+    git clone https://github.com/calcom/docker.git calcom-docker
     ```
 
 2. Change into the directory
