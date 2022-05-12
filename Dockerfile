@@ -59,7 +59,7 @@ ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
 
 COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY calcom/apps/web ./apps/web
-COPY calcom/packages ./packages
+COPY --from=deps calcom/packages ./packages
 COPY --from=deps /calcom/node_modules ./node_modules
 RUN yarn build
 
