@@ -44,11 +44,13 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
     cd calcom-docker
     ```
 
-3. Update the calcom submodule
+3. Update the calcom submodule. 
 
     ```bash
     git submodule update --remote --init
     ```
+
+    Note: DO NOT use recursive submodule update, otherwise you will receive a git authentication error.
 
 4. Rename `.env.example` to `.env` and then update `.env`
 
