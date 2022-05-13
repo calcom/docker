@@ -55,7 +55,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 5. Build and start Cal.com via docker compose
 
     ```bash
-    docker compose up --build
+    docker-compose up --build
     ```
 
 6. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
