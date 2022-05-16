@@ -31,6 +31,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     npm install --global prisma
 
+COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY --from=builder /calcom/node_modules ./node_modules
 COPY --from=builder /calcom/packages ./packages
 COPY --from=builder /calcom/apps/web ./apps/web
