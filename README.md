@@ -26,7 +26,7 @@ For Production, for the time being, please checkout the repository and build/pus
 
 ## Requirements
 
-Make sure you have `docker` & `docker compose` installed on the server / system.
+Make sure you have `docker` & `docker compose` installed on the server / system. Both are installed by most docker utilities, including Docker Desktop and Rancher Desktop.
 
 Note: `docker compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
 
@@ -54,19 +54,53 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 4. Rename `.env.example` to `.env` and then update `.env`
 
-5. Build and start Cal.com via docker compose
+5. Build the Cal.com docker image: 
+
+    Note: Due to application configuration requirements, an available database is currently required during the build process.
+
+    a) If hosting elsewhere, configure the `DATABASE_URL` in the .env file, and skip the next step
+
+    b) If a local or temporary database is required, start a local database via docker compose.
 
     ```bash
-    docker compose up --build
+    docker compose up -d database
     ```
 
-6. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
+6. Build Cal.com via docker compose
+
+    ```bash
+    docker compose build calcom
+    ```
+
+7. Start Cal.com via docker compose
+
+    (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
+
+    ```bash
+    docker compose up -d
+    ```
+
+    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker compose up -d calcom studio
+    ```
+
+    To run only the Cal.com web app, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker compose up -d calcom
+    ```
+
+    **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
+
+8. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
     a. Click on the `User` model to add a new user record.
 
     b. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
 
-7. Open a browser to [http://localhost:3000](http://localhost:3000) and login with your just created, first user.
+9. Open a browser to [http://localhost:3000](http://localhost:3000) (or your appropriately configured NEXT_PUBLIC_WEBAPP_URL) and login with your just created, first user.
 
 ## Configuration
 
@@ -77,10 +111,12 @@ These variables must be provided at the time of the docker build, and can be pro
 * NEXT_PUBLIC_WEBAPP_URL
 * NEXT_PUBLIC_LICENSE_CONSENT
 * NEXT_PUBLIC_TELEMETRY_KEY
+* DATABASE_URL
 
 ### Important Run-time variables
 
 * NEXTAUTH_SECRET
+* DATABASE_URL
 
 ## Git Submodules
 
