@@ -60,10 +60,9 @@ jobs:
       #       BASE_URL=http://localhost:3000
       #       NEXT_PUBLIC_APP_URL=http://localhost:3000
       #       DATABASE_URL=${DATABASE_URL}
-
       - name: Build with docker compose
         run: |
-          docker compose build calcom
+          DOCKER_BUILDKIT=0 docker compose build calcom
 
       - name: Cleanup
         run: |
