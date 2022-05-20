@@ -1,11 +1,13 @@
 name: Test actions image build
 
-# Controls when the workflow will run
 on:
-  push:
-    branches: [main]
-  # Allow running workflow manually from the Actions tab
-  workflow_dispatch: ~
+  workflow_dispatch:
+# Controls when the workflow will run
+# on:
+#   push:
+#     branches: [main]
+#   # Allow running workflow manually from the Actions tab
+#   workflow_dispatch: ~
 
 # Leaving in example for releases. Initially we simply push to 'latest'
 # on:
