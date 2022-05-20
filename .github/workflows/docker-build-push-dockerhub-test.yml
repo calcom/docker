@@ -71,5 +71,9 @@ jobs:
             NEXT_PUBLIC_APP_URL=http://localhost:3000
             DATABASE_URL=${DATABASE_URL}
 
+      - name: Cleanup
+        run: |
+          docker compose down
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
