@@ -6,6 +6,7 @@ volumes:
 
 networks:
   stack:
+    name: stack
     external: false
 
 services:
@@ -26,6 +27,8 @@ services:
         - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
         - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
         - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
+        - DATABASE_URL=${DATABASE_URL}
+      network: stack
     restart: always
     networks:
       - stack
