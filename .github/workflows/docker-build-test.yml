@@ -1,0 +1,79 @@
+name: Test actions image build
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [main]
+  # Allow running workflow manually from the Actions tab
+  workflow_dispatch: ~
+
+# Leaving in example for releases. Initially we simply push to 'latest'
+# on:
+  # release:
+    # types: [ created ]
+
+  # # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Git submodule update
+        run: |
+          git submodule update --init
+
+      - name: Docker Login
+      # You may pin to the exact commit or the version.
+      # uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v1.10.0
+        with:
+          # Username used to log against the Docker registry
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          # Password or personal access token used to log against the Docker registry
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          # Log out from the Docker registry at the end of a job
+          logout: true # optional, default is true
+
+      - name: Set up Docker builder
+        id: buildx
+        uses: docker/setup-buildx-action@v1.6.0
+      
+      - name: Start database
+        run: |
+          cp .env.example .env
+
+      - name: Start database
+        run: |
+          docker compose up -d database
+          
+      - name: Build and push image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: false
+          # The test image is /docker and is private. final image will be /calendso and public
+          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
+          network: stack
+          build-args: |
+            BASE_URL=http://localhost:3000
+            NEXT_PUBLIC_APP_URL=http://localhost:3000
+            DATABASE_URL=${DATABASE_URL}
+
+      - name: Cleanup
+        run: |
+          docker compose down
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
