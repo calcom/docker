@@ -40,7 +40,7 @@ jobs:
       
       - name: Copy env
         run: |
-          run: cat .env.example >>${GITHUB_ENV}
+          run: cat .env.example >> $GITHUB_ENV
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
