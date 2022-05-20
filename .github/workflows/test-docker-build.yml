@@ -46,20 +46,24 @@ jobs:
         run: |
           docker compose up -d database
           
-      - name: Build and push image
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: false
-          # The test image is /docker and is private. final image will be /calendso and public
-          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
-          network: stack
-          build-args: |
-            BASE_URL=http://localhost:3000
-            NEXT_PUBLIC_APP_URL=http://localhost:3000
-            DATABASE_URL=${DATABASE_URL}
+      # - name: Build and push image
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     push: false
+      #     # The test image is /docker and is private. final image will be /calendso and public
+      #     tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
+      #     network: stack
+      #     build-args: |
+      #       BASE_URL=http://localhost:3000
+      #       NEXT_PUBLIC_APP_URL=http://localhost:3000
+      #       DATABASE_URL=${DATABASE_URL}
+
+      - name: Build with docker compose
+        run: |
+          docker compose build calcom
 
       - name: Cleanup
         run: |
