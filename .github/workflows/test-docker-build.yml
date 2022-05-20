@@ -40,7 +40,8 @@ jobs:
       
       - name: Copy env
         run: |
-          cat .env.example >> $GITHUB_ENV
+          grep -o '^[^#]*' .env.example > .env
+          cat .env >> $GITHUB_ENV
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
