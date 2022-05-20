@@ -40,7 +40,7 @@ jobs:
       
       - name: Copy env
         run: |
-          cp .env.example .env
+          run: cat .env.example >>${GITHUB_ENV}
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -64,9 +64,10 @@ jobs:
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
 #           network: stack
           build-args: |
-            BASE_URL=http://localhost:3000
-            NEXT_PUBLIC_APP_URL=http://localhost:3000
-            DATABASE_URL=${DATABASE_URL}
+            NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+            NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
+            NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
+            DATABASE_URL=${{ env.DATABASE_URL }}
             
 #       - name: Build with docker compose
 #         run: |
