@@ -43,36 +43,36 @@ jobs:
           grep -o '^[^#]*' .env.example > .env
           cat .env >> $GITHUB_ENV
           
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: |
-            network=stack
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
+      #   with:
+      #     driver-opts: |
+      #       network=stack
 
       - name: Start database
         run: |
           docker compose up -d database
               
-      - name: Build and push image
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: false
-#           platforms: linux/amd64,linux/arm64
-          # The test image is /docker and is private. final image will be /calendso and public
-          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
-#           network: stack
-          build-args: |
-            NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
-            NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
-            NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
-            DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+#       - name: Build and push image
+#         id: docker_build
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: ./
+#           file: ./Dockerfile
+#           push: false
+# #           platforms: linux/amd64,linux/arm64
+#           # The test image is /docker and is private. final image will be /calendso and public
+#           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
+# #           network: stack
+#           build-args: |
+#             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+#             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
+#             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
+#             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
             
-#       - name: Build with docker compose
-#         run: |
-#           DOCKER_BUILDKIT=0 docker compose build calcom
+      - name: Build with docker compose
+        run: |
+          DOCKER_BUILDKIT=0 docker compose build calcom
 
       - name: Cleanup
         run: |
