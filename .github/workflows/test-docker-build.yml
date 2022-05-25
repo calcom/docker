@@ -74,6 +74,11 @@ jobs:
         run: |
           DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
+      - name: Push docker image
+        run: |
+          docker tag docker_calcom:latest calendso/calendso:canary
+          docker push calendso/calendso:canary
+
       - name: Cleanup
         run: |
           docker compose down
