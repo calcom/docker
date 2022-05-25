@@ -72,7 +72,7 @@ jobs:
             
       - name: Build with docker compose
         run: |
-          DOCKER_BUILDKIT=0 docker compose build calcom
+          DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
       - name: Cleanup
         run: |
