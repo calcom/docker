@@ -94,8 +94,8 @@ jobs:
 
       - name: Push docker image
         run: |
-          docker tag docker_calcom:latest calendso/calendso:canary
-          docker push calendso/calendso:canary
+          docker tag docker_calcom:latest calendso/calendso:latest
+          docker push calendso/calendso:latest
 
       - name: Cleanup
         run: |
