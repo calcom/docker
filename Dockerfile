@@ -35,6 +35,7 @@ COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY --from=builder /calcom/node_modules ./node_modules
 COPY --from=builder /calcom/packages ./packages
 COPY --from=builder /calcom/apps/web ./apps/web
+COPY --from=builder /calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
 COPY scripts scripts
 
 EXPOSE 3000
