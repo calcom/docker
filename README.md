@@ -108,13 +108,13 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
 
-Changing these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
 | NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | required | `http://localhost:3000` |
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
-| NEXT_PUBLIC_TELEMETRY_KEY | NEXT telemetry key | required | `js.2pvs2bbpqq1zxna97wcml.oi2jzirnbj1ev4tc57c5r` |
+| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
