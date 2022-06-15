@@ -112,21 +112,23 @@ Changing these variables is not required for evaluation, but is required for run
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
-| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | true | `http://localhost:3000` |
-| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false | false |  |
-| NEXT_PUBLIC_TELEMETRY_KEY | NEXT telemetry key | true | `js.2pvs2bbpqq1zxna97wcml.oi2jzirnbj1ev4tc57c5r` |
-| DATABASE_URL | database url with credentials | true | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| NEXTAUTH_SECRET | Cookie encryption key | true | `secret` |
-| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | true | `secret` |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | required | `http://localhost:3000` |
+| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
+| NEXT_PUBLIC_TELEMETRY_KEY | NEXT telemetry key | required | `js.2pvs2bbpqq1zxna97wcml.oi2jzirnbj1ev4tc57c5r` |
+| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
+| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
 
 ### Important Run-time variables
 
 These variables must also be provided at runtime
 
-* CALCOM_LICENSE_KEY
-* NEXTAUTH_SECRET (must match value used in build)
-* CALENDSO_ENCRYPTION_KEY (must match value used in build)
-* DATABASE_URL
+| Variable | Description | Required | Default |
+| --- | --- | --- | --- |
+| CALCOM_LICENSE_KEY | Enterprise License Key |  |  |
+| NEXTAUTH_SECRET | must match build variable | required | `secret` |
+| CALENDSO_ENCRYPTION_KEY | must build variable | required | `secret` |
+| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 
 ## Git Submodules
 
