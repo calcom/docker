@@ -15,6 +15,9 @@ on:
   # Allow running workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  NODE_OPTIONS: '--max_old_space_size=4096'
+
 # Leaving in example for releases. Initially we simply push to 'latest'
 # on:
   # release:
