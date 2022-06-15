@@ -127,7 +127,7 @@ These variables must also be provided at runtime
 | --- | --- | --- | --- |
 | CALCOM_LICENSE_KEY | Enterprise License Key |  |  |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
-| CALENDSO_ENCRYPTION_KEY | must build variable | required | `secret` |
+| CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 
 ## Git Submodules
