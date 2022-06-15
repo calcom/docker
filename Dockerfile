@@ -17,7 +17,6 @@ ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
     NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
     CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
 
-
 COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY calcom/apps/web ./apps/web
 COPY calcom/packages ./packages
