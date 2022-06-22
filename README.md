@@ -66,10 +66,10 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
     docker compose up -d database
     ```
 
-6. Build Cal.com via docker compose
+6. Build Cal.com via docker compose (DOCKER_BUILDKIT=0 must be provided to allow a network bridge to be used at build time. This requirement will be removed in the future)
 
     ```bash
-    docker compose build calcom
+    DOCKER_BUILDKIT=0 docker compose build calcom
     ```
 
 7. Start Cal.com via docker compose
