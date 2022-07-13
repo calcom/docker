@@ -1,4 +1,4 @@
-FROM node:14 as builder
+FROM node:16 as builder
 
 WORKDIR /calcom
 ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
@@ -25,7 +25,7 @@ RUN yarn install --frozen-lockfile
 
 RUN yarn build
 
-FROM node:14 as runner
+FROM node:16 as runner
 
 WORKDIR /calcom
 ENV NODE_ENV production
