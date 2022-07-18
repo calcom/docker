@@ -1,5 +1,5 @@
-# Use postgres/example user/password credentials; starts a postgres instance on port 5450 to use as a local db
-version: '3.9'
+# Use postgres/example user/password credentials
+version: '3.1'
 
 volumes:
   database-data:
@@ -11,15 +11,13 @@ networks:
 
 services:
   database:
-    image: postgres # profiles: ["withpostgres"] only starts when specifying this profile
-    container_name: calendso-db
-    restart: unless-stopped
+    image: postgres
+    restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
     env_file: .env
     networks:
       - stack
-      - calendso-stack
 
   calcom:
     build:
@@ -36,41 +34,29 @@ services:
     restart: always
     networks:
       - stack
-      - calendso-stack
     ports:
-      - ${PORT-3000}:3000
+      - 3000:3000
     env_file: .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - NODE_ENV=development
-      - POSTGRES_PASSWORD = ""
-      - POSTGRES_HOST_AUTH_METHOD = trust
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:
-      - database # comment out when using non-docker database (=enabled "withpostgres" profile)
-    volumes:
-      - "./calendso:/app/"
-      - "./scripts:/app/scripts"
+      - database
 
-# Optional use of Prisma Studio. To use *with* Prisma Studio: 
-# docker-compose --profile withstudio up
+# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
     image: calendso/calendso:latest
-    container_name: calendso-studio
-    restart: unless-stopped
-    profiles: ["withstudio"] # only starts when specifying this profile
+    restart: always
     networks:
       - stack
-      - calendso-stack
     ports:
       - 5555:5555
-    volumes:
-      db_data:
     env_file: .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
     depends_on:
-      - database # comment out when using non-docker database (=enabled "withpostgres" profile)
+      - database
     command:
       - npx
       - prisma
       - studio
+# END SECTION: Optional use of Prisma Studio.
