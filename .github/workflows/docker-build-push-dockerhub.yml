@@ -92,6 +92,8 @@ jobs:
 #             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
             
       - name: Build with docker compose
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
         run: |
           DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
