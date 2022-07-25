@@ -84,11 +84,9 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
-          push: false
+          push: true
           platforms: linux/amd64,linux/arm64
-          # The test image is /docker and is private. final image will be /calendso and public
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
-#           network: stack
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
@@ -98,11 +96,6 @@ jobs:
       # - name: Build with docker compose
       #   run: |
       #     DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
-
-      # - name: Push docker image
-      #   run: |
-      #     docker tag docker_calcom:latest calendso/calendso:latest
-      #     docker push calendso/calendso:latest
 
       - name: Cleanup
         run: |
