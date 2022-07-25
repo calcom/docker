@@ -54,7 +54,7 @@ wait_for() {
       ;;
     wget)
       if ! command -v wget >/dev/null; then
-        echoerr 'nc command is missing!'
+        echoerr 'wget command is missing!'
         exit 1
       fi
       ;;
@@ -62,11 +62,11 @@ wait_for() {
 
   while :; do
     case "$PROTOCOL" in
-      tcp) 
+      tcp)
         nc -w 1 -z "$HOST" "$PORT" > /dev/null 2>&1
         ;;
       http)
-        wget --timeout=1 -q "$HOST" -O /dev/null > /dev/null 2>&1 
+        wget --timeout=1 -q "$HOST" -O /dev/null > /dev/null 2>&1
         ;;
       *)
         echoerr "Unknown protocol '$PROTOCOL'"
@@ -75,7 +75,7 @@ wait_for() {
     esac
 
     result=$?
-        
+
     if [ $result -eq 0 ] ; then
       if [ $# -gt 7 ] ; then
         for result in $(seq $(($# - 7))); do
