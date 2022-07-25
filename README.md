@@ -142,6 +142,12 @@ git submodule update --remote --init
 
 For more advanced usage, please refer to the git documentation: [https://git-scm.com/book/en/v2/Git-Tools-Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
+
+## Helm and K8S
+
+Please read the [Helm Chart README](./chart/calendso-chart/README.md) for more informations
+
+
 ## Troubleshooting
 
 * SSL edge termination: If running behind a load balancer which handles SSL certificates, you will need to add the environmental variable `NODE_TLS_REJECT_UNAUTHORIZED=0` to prevent requests from being rejected. Only do this if you know what you are doing and trust the services/load-balancers directing traffic to your service.
