@@ -62,7 +62,9 @@ jobs:
           cat .env >> $GITHUB_ENV
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
-          
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
       - name: Start database
         run: |
@@ -76,7 +78,6 @@ jobs:
           buildkitd-flags: |
             --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
           
-              
       - name: Build and push image
         id: docker_build
         uses: docker/build-push-action@v3
