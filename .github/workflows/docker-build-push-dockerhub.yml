@@ -85,8 +85,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: false
-          # platforms: linux/amd64,linux/arm64
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           # The test image is /docker and is private. final image will be /calendso and public
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
 #           network: stack
