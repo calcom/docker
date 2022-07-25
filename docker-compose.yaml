@@ -6,6 +6,7 @@ volumes:
 
 networks:
   stack:
+    name: stack
     external: false
 
 services:
@@ -18,16 +19,18 @@ services:
     networks:
       - stack
 
-  calendso:
+  calcom:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - BASE_URL=${BASE_URL}
-        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+        - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
         - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
-        - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
-    image: calendso/calendso:latest
+        - CALCOM_TELEMETRY_DISABLED=${CALCOM_TELEMETRY_DISABLED}
+        - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+        - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
+        - DATABASE_URL=${DATABASE_URL}
+      network: stack
     restart: always
     networks:
       - stack

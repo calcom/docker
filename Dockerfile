@@ -1,42 +1,48 @@
-FROM node:14 as deps
+FROM node:16 as builder
 
 WORKDIR /calcom
-COPY calendso/apps/web/package.json calendso/apps/web/yarn.lock ./
-COPY calendso/apps/web/prisma prisma
-# RUN yarn install --frozen-lockfile
-RUN yarn install
-
-FROM node:14 as builder
-
-WORKDIR /calcom
-ARG BASE_URL
+ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
 ARG NEXT_PUBLIC_APP_URL
 ARG NEXT_PUBLIC_LICENSE_CONSENT
-ARG NEXT_PUBLIC_TELEMETRY_KEY 
-ENV BASE_URL=$BASE_URL \
+ARG CALCOM_TELEMETRY_DISABLED
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET=secret
+ARG CALENDSO_ENCRYPTION_KEY=secret
+ARG MAX_OLD_SPACE_SIZE=4096
+
+ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
     NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
-    NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
-    
-COPY calendso/apps/web ./apps/web
-COPY calendso/packages ./packages
-COPY --from=deps /calcom/node_modules ./apps/web/node_modules
-WORKDIR /calcom/apps/web
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
+    CALCOM_TELEMETRY_DISABLED=$CALCOM_TELEMETRY_DISABLED \
+    DATABASE_URL=$DATABASE_URL \
+    NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
+    CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY} \
+    NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE}
 
-FROM node:14 as runner
+COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
+COPY calcom/apps/web ./apps/web
+COPY calcom/packages ./packages
+
+RUN yarn install --frozen-lockfile
+
+RUN yarn build
+
+FROM node:16 as runner
+
 WORKDIR /calcom
 ENV NODE_ENV production
 
-COPY --from=builder /calcom/apps/web/node_modules ./node_modules
-COPY --from=builder /calcom/apps/web/prisma ./prisma
-COPY --from=builder /calcom/apps/web/scripts ./scripts
-COPY --from=builder /calcom/apps/web/next.config.js ./
-COPY --from=builder /calcom/apps/web/next-i18next.config.js ./
-COPY --from=builder /calcom/apps/web/public ./public
-COPY --from=builder /calcom/apps/web/.next ./.next
-COPY --from=builder /calcom/apps/web/package.json ./package.json
-COPY  scripts scripts
+RUN apt-get update && \
+    apt-get -y install netcat && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install --global prisma
+
+COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
+COPY --from=builder /calcom/node_modules ./node_modules
+COPY --from=builder /calcom/packages ./packages
+COPY --from=builder /calcom/apps/web ./apps/web
+COPY --from=builder /calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
+COPY scripts scripts
 
 EXPOSE 3000
 CMD ["/calcom/scripts/start.sh"]
