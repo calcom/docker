@@ -1,5 +1,5 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: '3.8'
 
 volumes:
   database-data:
@@ -11,6 +11,7 @@ networks:
 
 services:
   database:
+    container_name: database
     image: postgres
     restart: always
     volumes:
@@ -24,13 +25,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
-        - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
-        - CALCOM_TELEMETRY_DISABLED=${CALCOM_TELEMETRY_DISABLED}
-        - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-        - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
-        - DATABASE_URL=${DATABASE_URL}
-      network: stack
+        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
+        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
+        CALCOM_TELEMETRY_DISABLE: ${CALCOM_TELEMETRY_DISABLED}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
+        DATABASE_URL: ${DATABASE_URL}
     restart: always
     networks:
       - stack

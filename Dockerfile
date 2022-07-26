@@ -23,7 +23,8 @@ COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY calcom/apps/web ./apps/web
 COPY calcom/packages ./packages
 
-RUN yarn install --frozen-lockfile
+RUN yarn config set network-timeout 1000000000 -g && \ 
+    yarn install --frozen-lockfile
 
 RUN yarn build
 
