@@ -53,6 +53,8 @@ x-environment: &environment
 
 volumes:
   postgres-data:
+  calcom-app:
+  calcom-config:
 
 networks:
   default:
@@ -72,6 +74,9 @@ services:
     image: calendso/calcom
     build: .
     restart: always
+    volumes:
+      - calcom-app:/calendso/
+      - calcom-config:/config/
     networks:
       - default
     ports:

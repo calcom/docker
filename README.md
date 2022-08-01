@@ -114,7 +114,7 @@ Note: `docker-compose` without the hyphen is now the primary method of using doc
 9. Open a browser to [http://localhost:3000](http://localhost:3000) (or your appropriately configured NEXT_PUBLIC_WEBAPP_URL) and login with your just created, first user.
 
 ### Bonus tips
-    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database and run:
+    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database, uncomment the studio segment of the included `docker-compose.yml` and run:
 
     ```bash
     docker-compose up -d calcom studio
