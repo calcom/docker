@@ -1,0 +1,98 @@
+# Use postgres/example user/password credentials
+version: '3.9'
+
+x-environment: &environment
+    environment:
+      # Set this value to 'agree' to accept our license:
+      # LICENSE: https://github.com/calendso/calendso/blob/main/LICENSE
+      #
+      # Summary of terms:
+      # - The codebase has to stay open source, whether it was modified or not
+      # - You can not repackage or sell the codebase
+      # - Acquire a commercial license to remove these terms by emailing: license@cal.com
+      ## You must agree to these terms manually we can't agree to them for you.
+      # NEXT_PUBLIC_LICENSE_CONSENT:
+      # LICENSE:
+
+      ## Deployment configuration section you may need to change this if you're using a reverse proxy such as nginx, haproxy or træfik.
+      NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
+
+      # E-mail settings
+      # Configures the global From: header whilst sending emails.
+      EMAIL_FROM: notifications@example.com
+
+      # Configure SMTP settings (@see https://nodemailer.com/smtp/).
+      EMAIL_SERVER_HOST: smtp.example.com
+      EMAIL_SERVER_PORT: 587
+      EMAIL_SERVER_USER: email_user
+      EMAIL_SERVER_PASSWORD: email_password
+
+      ## Only change these if you know what you're doing.  Changes are unlikely to be needed.
+      ## However, you could change the password if you like before you start the first time. Also feel free to read about and implement Docker Secrets.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PORT: 5432
+
+      # GOOGLE_API_CREDENTIALS: {}
+
+      # Set this to '1' if you don't want Cal to collect anonymous usage.  This is not necessary, however, its kind to give back metrics to the app developers if you trust them.
+      CALCOM_TELEMETRY_DISABLED: 0
+
+      # Used for the Office 365 / Outlook.com Calendar integration.
+      # MS_GRAPH_CLIENT_ID:
+      # MS_GRAPH_CLIENT_SECRET:
+
+      # Used for the Zoom integration.
+      # ZOOM_CLIENT_ID:
+      # ZOOM_CLIENT_SECRET:
+
+      ## Probably only change this if you know what you're doing.
+      NODE_ENV: production
+
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    external: false
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    <<: *environment
+    networks:
+      - default
+
+  calcom:
+    image: calendso/calcom
+    build: .
+    restart: always
+    networks:
+      - default
+    ports:
+      - 3000:3000
+    <<: *environment
+    depends_on:
+      - postgres
+
+# # Optional use of Prisma Studio.
+# # You may delete the leading comments(hashtags) from the segment below from studio: onward to the command: section.
+# # IMPORTANT NOTICE: In production, comment out or remove the section below to prevent unwanted access to your database.
+
+#   studio:
+#     image: calendso/calendso:latest
+#     restart: always
+#     networks:
+#       - default
+#     ports:
+#       - 5555:5555
+#     <<: *environment
+#     depends_on:
+#       - postgres
+#     command: ["npx", "prisma", "studio"]
+# # END SECTION: Optional use of Prisma Studio.

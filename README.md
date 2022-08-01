@@ -26,73 +26,84 @@ For Production, for the time being, please checkout the repository and build/pus
 
 ## Requirements
 
-Make sure you have `docker` & `docker compose` installed on the server / system. Both are installed by most docker utilities, including Docker Desktop and Rancher Desktop.
+Make sure you have `docker` & `docker-compose` installed on the server / system. Both are installed by most docker utilities, including Docker Desktop and Rancher Desktop.
 
-Note: `docker compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
+Note: `docker-compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
 
 ## Getting Started
 
-1. Clone calcom-docker
+1. wget docker-compose.yml to wherever you plan on running this.
 
     ```bash
-    git clone https://github.com/calcom/docker.git calcom-docker
+    wget https://raw.githubusercontent.com/calcom/docker/main/docker-compose.yml
     ```
 
-2. Change into the directory
+2. Modify the environment section at the top of the `docker-compose.yml` file.
 
-    ```bash
-    cd calcom-docker
-    ```
 
-3. Update the calcom submodule. 
+    ```yaml
+    x-environment: &environment
+    environment:
+      # Set this value to 'agree' to accept our license:
+      # LICENSE: https://github.com/calendso/calendso/blob/main/LICENSE
+      #
+      # Summary of terms:
+      # - The codebase has to stay open source, whether it was modified or not
+      # - You can not repackage or sell the codebase
+      # - Acquire a commercial license to remove these terms by emailing: license@cal.com
+      ## You must agree to these terms manually we can't agree to them for you.
+      # NEXT_PUBLIC_LICENSE_CONSENT:
+      # LICENSE:
 
-    ```bash
-    git submodule update --remote --init
-    ```
+      ## Deployment configuration section you may need to change this if you're using a reverse proxy such as nginx, haproxy or træfik.
+      NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
 
-    Note: DO NOT use recursive submodule update, otherwise you will receive a git authentication error.
+      # E-mail settings
+      # Configures the global From: header whilst sending emails.
+      EMAIL_FROM: notifications@example.com
 
-4. Rename `.env.example` to `.env` and then update `.env`
+      # Configure SMTP settings (@see https://nodemailer.com/smtp/).
+      EMAIL_SERVER_HOST: smtp.example.com
+      EMAIL_SERVER_PORT: 587
+      EMAIL_SERVER_USER: email_user
+      EMAIL_SERVER_PASSWORD: email_password
 
-5. Build the Cal.com docker image: 
+      ## Only change these if you know what you're doing.  Changes are unlikely to be needed.  
+      ## However, you could change the password if you like before you start the first time. Also feel free to read about and implement Docker Secrets.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      DATABASE_HOST: postgres:5432
+      DATABASE_URL: ${DATABASE_URL:='postgresql://postgres:postgres@postgres:5432/postgres'}
+      # GOOGLE_API_CREDENTIALS: {}
 
-    Note: Due to application configuration requirements, an available database is currently required during the build process.
+      # Set this to '1' if you don't want Cal to collect anonymous usage.  This is not necessary, however, its kind to give back metrics to the app developers if you trust them.
+      CALCOM_TELEMETRY_DISABLED: 0
 
-    a) If hosting elsewhere, configure the `DATABASE_URL` in the .env file, and skip the next step
+      # Used for the Office 365 / Outlook.com Calendar integration.
+      # MS_GRAPH_CLIENT_ID:
+      # MS_GRAPH_CLIENT_SECRET:
 
-    b) If a local or temporary database is required, start a local database via docker compose.
+      # Used for the Zoom integration.
+      # ZOOM_CLIENT_ID:
+      # ZOOM_CLIENT_SECRET:
 
-    ```bash
-    docker compose up -d database
-    ```
+      ## Probably only change this if you know what you're doing.
+      NODE_ENV: production
+      ```
 
-6. Build Cal.com via docker compose (DOCKER_BUILDKIT=0 must be provided to allow a network bridge to be used at build time. This requirement will be removed in the future)
-
-    ```bash
-    DOCKER_BUILDKIT=0 docker compose build calcom
-    ```
-
-7. Start Cal.com via docker compose
+3. Start Cal.com via docker-compose
 
     (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
 
     ```bash
-    docker compose up -d
+    docker-compose up -d
     ```
-
-    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database and run:
-
+    ...and if you wish to follow the logs you may run...
     ```bash
-    docker compose up -d calcom studio
+    docker-compose logs -f
     ```
-
-    To run only the Cal.com web app, ensure that DATABASE_URL is configured for an available database and run:
-
-    ```bash
-    docker compose up -d calcom
-    ```
-
-    **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
+    and press `ctrl+c` to end following the console logging output.
 
 8. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
 
@@ -102,13 +113,29 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 9. Open a browser to [http://localhost:3000](http://localhost:3000) (or your appropriately configured NEXT_PUBLIC_WEBAPP_URL) and login with your just created, first user.
 
+### Bonus tips
+    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker-compose up -d calcom studio
+    ```
+
+    To run only the Cal.com web app, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker-compose up -d calcom
+    ```
+
+    **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
+
+
 ## Configuration
 
 ### Build-time variables
 
-These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
+These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com)
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
@@ -116,8 +143,8 @@ Updating these variables is not required for evaluation, but is required for run
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
 | CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
-| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
+| NEXTAUTH_SECRET | Cookie encryption key | required | `randomly defined on first boot` |
+| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `randomly defined on first boot` |
 
 ### Important Run-time variables
 
@@ -126,21 +153,9 @@ These variables must also be provided at runtime
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
 | CALCOM_LICENSE_KEY | Enterprise License Key |  |  |
-| NEXTAUTH_SECRET | must match build variable | required | `secret` |
-| CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
+| NEXTAUTH_SECRET | must match build variable | required | `randomly defined on first boot` |
+| CALENDSO_ENCRYPTION_KEY | must match build variable | required | `randomly defined on first boot` |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-
-## Git Submodules
-
-This repository uses a git submodule.
-
-To update the calcom submodule, use the following command:
-
-```bash
-git submodule update --remote --init
-```
-
-For more advanced usage, please refer to the git documentation: [https://git-scm.com/book/en/v2/Git-Tools-Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 
 ## Troubleshooting
 
