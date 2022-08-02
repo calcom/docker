@@ -2,24 +2,41 @@
 # set -x ## uncomment for debug
 
 ## Environment Config
-export  NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL:-"http://localhost:3000"}
-export  NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-"http://localhost:3000"}
-export  NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT:-"false"}
-export  CALCOM_TELEMETRY_DISABLED=${CALCOM_TELEMETRY_DISABLED:-"0"}
-export  POSTGRES_USER=${POSTGRES_USER:-"postgres"}
-export  POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-"postgres"}
-export  POSTGRES_DB=${POSTGRES_DB:-"postgres"}
-export  POSTGRES_PORT=${POSTGRES_PORT:-"5432"}
+function ifndef () {
+  ## Test for null variable and set default, echo result to stdout.
+  export ${1}="${!1:=$2}" 
+  echo "$1 is ${!1}"
+}
+
+ifndef NEXT_PUBLIC_WEBAPP_URL      "http://localhost:3000"
+ifndef NEXT_PUBLIC_APP_URL         "http://localhost:3000"
+## Must be manually overridden to "true" by end user.
+ifndef NEXT_PUBLIC_LICENSE_CONSENT "false"
+
+## If you want to keep your secrets set this to 1
+ifndef CALCOM_TELEMETRY_DISABLED   "0"
+
+## Database Config, usually good to be set as default.
+ifndef POSTGRES_USER               "postgres"
+ifndef POSTGRES_PASSWORD           "postgres"
+ifndef POSTGRES_DB                 "postgres"
+ifndef POSTGRES_PORT               "5432"
+
 ## Use this in a case where you have an external DB.
-export  POSTGRES_ADDRESS=${POSTGRES_ADDRESS:-"postgres"}
-export  DATABASE_HOST="$POSTGRES_ADDRESS:$POSTGRES_PORT"
-export  DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-export  NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-$(cat /config/NEXTAUTH_SECRET)}
-export  CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY:-$(cat /config/CALENDSO_ENCRYPTION_KEY)}
-export  NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE:-"4096"}
-export  RELEASE_COMMIT_ID="${RELEASE_COMMIT_ID:-6b0ac96b38b0dbd78809a73e19010192f31cc769}"
-export  REPOSITORY_URL="${REPOSITORY_URL:-'https://github.com/calcom/cal.com.git'}"
-export  APP_PATH=${APP_PATH:-"/calendso"}
+ifndef POSTGRES_ADDRESS            "postgres"
+## More database environment strings required for launch.
+ifndef DATABASE_HOST               "$POSTGRES_ADDRESS:$POSTGRES_PORT"
+ifndef DATABASE_URL                "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}"
+## Cryptography and secrets.
+ifndef NEXTAUTH_SECRET             $([ -f /config/NEXTAUTH_SECRET ] && cat /config/NEXTAUTH_SECRET)
+ifndef CALENDSO_ENCRYPTION_KEY     $([ -f /config/CALENDSO_ENCRYPTION_KEY ] && cat /config/CALENDSO_ENCRYPTION_KEY)
+
+## Other settings that are mostly for container internal operations but are available for customization if desired.
+ifndef MAX_OLD_SPACE_SIZE          4096
+ifndef NODE_OPTIONS                "--max-old-space-size=$MAX_OLD_SPACE_SIZE"
+ifndef RELEASE_COMMIT_ID           "6b0ac96b38b0dbd78809a73e19010192f31cc769"
+ifndef REPOSITORY_URL              "https://github.com/calcom/cal.com.git"
+ifndef APP_PATH                    "/calendso"
 
 function basic_start() {
   cd $APP_PATH
