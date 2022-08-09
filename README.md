@@ -18,7 +18,7 @@ The Docker configuration for Cal.com is an effort powered by people within the c
 
 ## Important Notes
 
-This Docker Image is managed by the Cal.com Community. Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
+This Docker Image is managed by the Cal.com Community. Join the team [here](https://github.com/calcom/docker/discussions/32). Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
 
 Currently, this image is intended for local development/evaluation use only, as there are specific requirements for providing environmental variables at build-time in order to specify a non-localhost BASE_URL. (this is due to the nature of the static site compilation, which embeds the variable values). The ability to update these variables at runtime is in-progress and will be available in the future.
 
