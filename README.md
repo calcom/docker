@@ -28,7 +28,7 @@ For Production, for the time being, please checkout the repository and build/pus
 
 Make sure you have `docker` & `docker-compose` installed on the server / system. Both are installed by most docker utilities, including Docker Desktop and Rancher Desktop.
 
-Note: `docker-compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
+Note: `docker compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
 
 ## Getting Started
 
