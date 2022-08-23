@@ -85,8 +85,8 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
-          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
+          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
