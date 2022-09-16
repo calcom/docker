@@ -14,9 +14,9 @@ if [ -n "${GOOGLE_API_CREDENTIALS_FILE}" ]; then
   export GOOGLE_API_CREDENTIALS
 fi
 
-if [ -n "${JWT_SECRET_FILE}" ]; then
-  JWT_SECRET=$(cat "$JWT_SECRET_FILE")
-  export JWT_SECRET
+if [ -n "${NEXTAUTH_SECRET_FILE}" ]; then
+  NEXTAUTH_SECRET=$(cat "$NEXTAUTH_SECRET_FILE")
+  export NEXTAUTH_SECRET
 fi
 
 if [ -n "${POSTGRES_PASSWORD_FILE}" ]; then
@@ -41,6 +41,7 @@ fi
 
 set -x
 
-/app/scripts/wait-for-it.sh ${DATABASE_HOST} -- echo "database is up"
-npx prisma migrate deploy
+scripts/wait-for-it.sh ${DATABASE_HOST} -- echo "database is up"
+npx prisma migrate deploy --schema /calcom/packages/prisma/schema.prisma
+npx ts-node --transpile-only /calcom/packages/prisma/seed-app-store.ts
 yarn start

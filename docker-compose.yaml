@@ -1,15 +1,17 @@
 # Use postgres/example user/password credentials
-version: '3.1'
+version: '3.8'
 
 volumes:
   database-data:
 
 networks:
   stack:
+    name: stack
     external: false
 
 services:
   database:
+    container_name: database
     image: postgres
     restart: always
     volumes:
@@ -18,16 +20,18 @@ services:
     networks:
       - stack
 
-  calendso:
+  calcom:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - BASE_URL=${BASE_URL}
-        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-        - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
-        - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
-    image: calendso/calendso:latest
+        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
+        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
+        CALCOM_TELEMETRY_DISABLE: ${CALCOM_TELEMETRY_DISABLED}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
+        DATABASE_URL: ${DATABASE_URL}
+      network: stack
     restart: always
     networks:
       - stack

@@ -33,9 +33,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Git submodule update
+        run: |
+          git submodule update --init
 
       - name: Docker Login
       # You may pin to the exact commit or the version.
@@ -52,19 +55,51 @@ jobs:
       - name: Set up Docker builder
         id: buildx
         uses: docker/setup-buildx-action@v1.6.0
-        
+      
+      - name: Copy env
+        run: |
+          grep -o '^[^#]*' .env.example > .env
+          cat .env >> $GITHUB_ENV
+          echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
+          eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Start database
+        run: |
+          docker compose up -d database
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: |
+            network=container:database
+          buildkitd-flags: |
+            --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+          
       - name: Build and push image
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./
           file: ./Dockerfile
           push: true
-          # The test image is /docker and is private. final image will be /calendso and public
+          platforms: linux/amd64,linux/arm64
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
           build-args: |
-            BASE_URL=http://localhost:3000
-            NEXT_PUBLIC_APP_URL=http://localhost:3000
+            NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+            NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
+            NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
+            DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+            
+      # - name: Build with docker compose
+      #   run: |
+      #     DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
+
+      - name: Cleanup
+        run: |
+          docker compose down
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
