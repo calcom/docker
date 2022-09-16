@@ -133,23 +133,22 @@ These variables must also be provided at runtime
 
 ### Docker secrets
 
-As an alternative to passing sensitive information via environment variables, _FILE may be appended to the environment variables listed below, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in /run/secrets/<secret_name> files.
+As an alternative to passing sensitive information via environment variables, the `_FILE` suffix may be appended to the environment variables listed below, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets.
 
-
-* CALENDSO_ENCRYPTION_KEY
-* EMAIL_SERVER_PASSWORD
-* GOOGLE_API_CREDENTIALS
-* JWT_SECRET
-* MS_GRAPH_CLIENT_SECRET
-* POSTGRES_PASSWORD
-* ZOOM_CLIENT_SECRET
+* `CALCOM_LICENSE_KEY`
+* `CALENDSO_ENCRYPTION_KEY`
+* `EMAIL_SERVER_PASSWORD`
+* `GOOGLE_API_CREDENTIALS`
+* `MS_GRAPH_CLIENT_SECRET`
+* `POSTGRES_PASSWORD`
+* `ZOOM_CLIENT_SECRET`
 
 The `DATABASE_URL` environment variable can be omitted; it will be computed automatically based on the values of the following environment variables (or their `_FILE` replacements):
 
-* POSTGRES_USER
-* POSTGRES_PASSWORD
-* DATABASE_HOST
-* POSTGRES_DB
+* `POSTGRES_USER`
+* `POSTGRES_PASSWORD`
+* `DATABASE_HOST`
+* `POSTGRES_DB`
 
 ## Git Submodules
 
