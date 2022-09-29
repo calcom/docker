@@ -112,7 +112,7 @@ Updating these variables is not required for evaluation, but is required for run
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
-| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | required | `http://localhost:3000` |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
 | CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
@@ -125,6 +125,7 @@ These variables must also be provided at runtime
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL of the site.  NOTE: if this value differs from the value used at build-time, there will be a slight delay during container start (to update the statically built files). | optional | `http://localhost:3000` |
 | CALCOM_LICENSE_KEY | Enterprise License Key |  |  |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
