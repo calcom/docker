@@ -51,10 +51,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           # Log out from the Docker registry at the end of a job
           logout: true # optional, default is true
-
-      - name: Set up Docker builder
-        id: buildx
-        uses: docker/setup-buildx-action@v1.6.0
       
       - name: Copy env
         run: |
@@ -63,8 +59,8 @@ jobs:
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
       
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v2
 
       - name: Start database
         run: |
