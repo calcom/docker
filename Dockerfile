@@ -22,7 +22,7 @@ COPY calcom/packages ./packages
 
 RUN yarn global add turbo && \
     yarn config set network-timeout 1000000000 -g && \ 
-    turbo prune --scope=web --docker && \
+    turbo prune --scope=@calcom/web --docker && \
     yarn install
 
 RUN yarn build
