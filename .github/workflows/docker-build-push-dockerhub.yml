@@ -56,11 +56,9 @@ jobs:
           cat .env >> $GITHUB_ENV
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
-      
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: linux/arm64
+      # Temporarily disable ARM build due to runner performance issues
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v2
 
       - name: Start database
         run: |
@@ -80,8 +78,8 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
-          push: false
-          platforms: linux/arm64
+          push: true
+          platforms: linux/amd64
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
