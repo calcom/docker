@@ -57,8 +57,10 @@ jobs:
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
       
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: linux/arm64
 
       - name: Start database
         run: |
