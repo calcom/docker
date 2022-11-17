@@ -81,7 +81,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: false
-          platforms: linux/amd64
+          platforms: linux/arm64
           tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
