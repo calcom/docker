@@ -20,10 +20,12 @@ COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
 COPY calcom/apps/web ./apps/web
 COPY calcom/packages ./packages
 
-RUN yarn config set network-timeout 1000000000 -g && \ 
-    yarn install --frozen-lockfile
+RUN yarn global add turbo && \
+    yarn config set network-timeout 1000000000 -g && \ 
+    turbo prune --scope=@calcom/web --docker && \
+    yarn install
 
-RUN yarn build
+RUN yarn turbo run build --filter=@calcom/web
 
 FROM node:16 as runner
 
