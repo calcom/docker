@@ -21,6 +21,7 @@ services:
       - stack
 
   calcom:
+    image: calendso/calendso:latest
     build:
       context: .
       dockerfile: Dockerfile
