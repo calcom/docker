@@ -37,18 +37,24 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 1. Clone calcom-docker
 
     ```bash
-    git clone https://github.com/calcom/docker.git calcom-docker
+    git clone https://github.com/calcom/docker.git
     ```
 
 2. Change into the directory
 
     ```bash
-    cd calcom-docker
+    cd docker
     ```
 
 3. Prepare your configuration: Rename `.env.example` to `.env` and then update `.env`
 
-    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. Update the appropriate values in your .env file, then proceed.
+    ```bash
+        cp .env.example .env
+    ```
+
+    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
+    
+    Update the appropriate values in your .env file, then proceed.
 
 4. Start Cal.com via docker compose
 
