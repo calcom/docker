@@ -40,7 +40,7 @@ jobs:
         run: |
           git submodule update --init
 
-      - name: Docker Login
+      - name: Log in to the Docker Hub registry
         uses: docker/login-action@v1.10.0
         with:
           # Username used to log against the Docker registry
@@ -49,13 +49,21 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           # Log out from the Docker registry at the end of a job
           logout: true # optional, default is true
-      
+
+      - name: Log in to the Github Container registry
+        uses: docker/login-action@v1.10.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Copy env
         run: |
           grep -o '^[^#]*' .env.example > .env
           cat .env >> $GITHUB_ENV
           echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
+
       # Temporarily disable ARM build due to runner performance issues
 #       - name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
@@ -80,7 +88,9 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
-          tags: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
+          tags: |
+            docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
+            ghcr.io/calcom/web:latest
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
