@@ -1,12 +1,29 @@
 <!-- PROJECT LOGO -->
-<div align="right">
+<p align="center">
   <a href="https://github.com/calcom/cal.com">
-    <img src="https://cal.com/logo.svg" alt="Logo" width="160" height="65">
-  </a><br/>
-  <a href="https://cal.com">Website</a>
-  ·
-  <a href="https://github.com/calcom/docker/issues">Community Support</a>
-</div>
+    <img src="https://user-images.githubusercontent.com/8019099/133430653-24422d2a-3c8d-4052-9ad6-0580597151ee.png" alt="Logo">
+
+  </a>
+
+  <h3 align="center">Cal.com (formerly Calendso)</h3>
+
+  <p align="center">
+    The open-source Calendly alternative. (Docker Edition)
+    <br />
+    <a href="https://cal.com"><strong>Learn more »</strong></a>
+    <br />
+    <br />
+    <a href="https://cal.com/slack">Slack</a>
+    ·
+    <a href="https://cal.com">Website</a>
+    ·
+    <a href="https://github.com/calcom/cal.com/issues">Core Cal.com related Issues</a>
+    ·
+    <a href="https://github.com/calcom/docker/issues">Docker specific Issues</a>
+    ·
+    <a href="https://cal.com/roadmap">Roadmap</a>
+  </p>
+</p>
 
 # Docker
 
