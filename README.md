@@ -66,7 +66,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 3. Prepare your configuration: Rename `.env.example` to `.env` and then update `.env`
 
     ```bash
-        cp .env.example .env
+    cp .env.example .env
     ```
 
     Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
