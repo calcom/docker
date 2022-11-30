@@ -1,12 +1,29 @@
 <!-- PROJECT LOGO -->
-<div align="right">
+<p align="center">
   <a href="https://github.com/calcom/cal.com">
-    <img src="https://cal.com/logo.svg" alt="Logo" width="160" height="65">
-  </a><br/>
-  <a href="https://cal.com">Website</a>
-  ·
-  <a href="https://github.com/calcom/docker/issues">Community Support</a>
-</div>
+    <img src="https://user-images.githubusercontent.com/8019099/133430653-24422d2a-3c8d-4052-9ad6-0580597151ee.png" alt="Logo">
+
+  </a>
+
+  <h3 align="center">Cal.com (formerly Calendso)</h3>
+
+  <p align="center">
+    The open-source Calendly alternative. (Docker Edition)
+    <br />
+    <a href="https://cal.com"><strong>Learn more »</strong></a>
+    <br />
+    <br />
+    <a href="https://cal.com/slack">Slack</a>
+    ·
+    <a href="https://cal.com">Website</a>
+    ·
+    <a href="https://github.com/calcom/cal.com/issues">Core Cal.com related Issues</a>
+    ·
+    <a href="https://github.com/calcom/docker/issues">Docker specific Issues</a>
+    ·
+    <a href="https://cal.com/roadmap">Roadmap</a>
+  </p>
+</p>
 
 # Docker
 
@@ -30,9 +47,79 @@ Make sure you have `docker` & `docker compose` installed on the server / system.
 
 Note: `docker compose` without the hyphen is now the primary method of using docker-compose, per the Docker documentation.
 
-## Getting Started
+## (Most users) Running Cal.com with Docker Compose
 
-1. Clone calcom-docker
+If you are evaluating Cal.com or running with minimal to no modifications, this option is for you.
+
+1. Clone calcom/docker
+
+    ```bash
+    git clone https://github.com/calcom/docker.git
+    ```
+
+2. Change into the directory
+
+    ```bash
+    cd docker
+    ```
+
+3. Prepare your configuration: Rename `.env.example` to `.env` and then update `.env`
+
+    ```bash
+        cp .env.example .env
+    ```
+
+    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
+    
+    Update the appropriate values in your .env file, then proceed.
+
+4. Start Cal.com via docker compose
+
+    (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
+
+    ```bash
+    docker compose up -d
+    ```
+
+    To run Cal.com web app and Prisma Studio against a remote database, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker compose up -d calcom studio
+    ```
+
+    To run only the Cal.com web app, ensure that DATABASE_URL is configured for an available database and run:
+
+    ```bash
+    docker compose up -d calcom
+    ```
+
+    **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
+
+5. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
+
+## Updating Cal.com
+
+1. Stop the Cal.com stack
+
+    ```bash
+    docker compose down
+    ```
+
+2. Pull the latest changes
+
+    ```bash
+    docker compose pull
+    ```
+3. Update env vars as necessary.
+4. Re-start the Cal.com stack
+
+    ```bash
+    docker compose up -d
+    ```
+
+## (Advanced users) Build and Run Cal.com
+
+1. Clone calcom/docker
 
     ```bash
     git clone https://github.com/calcom/docker.git calcom-docker
@@ -53,6 +140,8 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
     Note: DO NOT use recursive submodule update, otherwise you will receive a git authentication error.
 
 4. Rename `.env.example` to `.env` and then update `.env`
+
+    For configuration options see [Build-time variables](#build-time-variables) below. Update the appropriate values in your .env file, then proceed.
 
 5. Build the Cal.com docker image: 
 
@@ -94,30 +183,9 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
     **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
 
-8. (First Run) Open a browser to [http://localhost:5555](http://localhost:5555) to look at or modify the database content.
-
-    a. Click on the `User` model to add a new user record.
-
-    b. Fill out the fields (remembering to encrypt your password with [BCrypt](https://bcrypt-generator.com/)) and click `Save 1 Record` to create your first user.
-
-9. Open a browser to [http://localhost:3000](http://localhost:3000) (or your appropriately configured NEXT_PUBLIC_WEBAPP_URL) and login with your just created, first user.
+8. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
 
 ## Configuration
-
-### Build-time variables
-
-These variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
-
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
-
-| Variable | Description | Required | Default |
-| --- | --- | --- | --- |
-| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
-| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
-| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
-| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
-| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
 
 ### Important Run-time variables
 
@@ -132,11 +200,26 @@ These variables must also be provided at runtime
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
 | DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 
+### Build-time variables
+
+If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
+
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
+
+| Variable | Description | Required | Default |
+| --- | --- | --- | --- |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
+| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
+| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
+| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
+| CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
+
 ## Git Submodules
 
 This repository uses a git submodule.
 
-To update the calcom submodule, use the following command:
+For users building their own images, to update the calcom submodule, use the following command:
 
 ```bash
 git submodule update --remote --init
