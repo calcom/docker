@@ -34,7 +34,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 If you are evaluating Cal.com or running with minimal to no modifications, this option is for you.
 
-1. Clone calcom-docker
+1. Clone calcom/docker
 
     ```bash
     git clone https://github.com/calcom/docker.git
@@ -102,7 +102,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
 ## (Advanced users) Build and Run Cal.com
 
-1. Clone calcom-docker
+1. Clone calcom/docker
 
     ```bash
     git clone https://github.com/calcom/docker.git calcom-docker
