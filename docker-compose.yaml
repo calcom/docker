@@ -46,7 +46,7 @@ services:
 
 # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
-    image: calendso/calendso:latest
+    image: calcom.docker.scarf.sh/calendso/calendso:latest
     restart: always
     networks:
       - stack
