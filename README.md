@@ -72,11 +72,21 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
     
     Update the appropriate values in your .env file, then proceed.
-
-4. Start Cal.com via docker compose
+    
+4. (optional) Pre-Pull the images by running the following command:
+    
+    ```bash
+    docker compose pull
+    ```
+    
+    This will use the default image locations as specified by `image:` in the docker-compose.yaml file.
+    
+    Note: To aid with support, by default Scarf.sh is used as registry proxy for download metrics.
+    
+5. Start Cal.com via docker compose
 
     (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
-
+    
     ```bash
     docker compose up -d
     ```
@@ -95,7 +105,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
 
-5. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
+6. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
 
 ## Updating Cal.com
 
