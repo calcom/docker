@@ -90,6 +90,7 @@ jobs:
           platforms: linux/amd64
           tags: |
             docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
+            docker.io/calcom/cal.com:latest
             ghcr.io/calcom/web:latest
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
