@@ -21,7 +21,7 @@ services:
       - stack
 
   calcom:
-    image: calcom.docker.scarf.sh/calendso/calendso:latest
+    image: calcom.docker.scarf.sh/calcom/cal.com
     build:
       context: .
       dockerfile: Dockerfile
