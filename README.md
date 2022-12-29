@@ -271,3 +271,6 @@ docker-calcom-1  | @calcom/web:start:   url: 'http://testing.localhost:3000/api/
 docker-calcom-1  | @calcom/web:start:   message: 'request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost'
 docker-calcom-1  | @calcom/web:start: }
 ```
+
+
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
