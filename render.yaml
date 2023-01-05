@@ -12,14 +12,8 @@ services:
           name: cal-postgres
           property: connectionString
 
-      - key: NEXT_PUBLIC_WEBAPP_URL
-        value: https://cal-web.onrender.com
-
       - key: CALENDSO_ENCRYPTION_KEY
         value: secret
-
-      - key: NEXTAUTH_URL
-        value: https://cal-web.onrender.com
 
       - key: NEXTAUTH_SECRET
         value: secret
