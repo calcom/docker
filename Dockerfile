@@ -16,7 +16,7 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY} \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE}
 
-COPY calcom/package.json calcom/yarn.lock calcom/turbo.json ./
+COPY calcom/package.json calcom/yarn.lock calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh ./
 COPY calcom/apps/web ./apps/web
 COPY calcom/packages ./packages
 
