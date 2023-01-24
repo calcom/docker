@@ -5,7 +5,10 @@ name: Build and push image to DockerHub
 # Controls when the workflow will run
 on:
   push:
-    branches: [main]
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
   # update on run of Update Calendso nightly submodule update
   workflow_run:
     workflows: ["Update Calendso"]
@@ -56,6 +59,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            docker.io/calendso/calendso
+            docker.io/calcom/cal.com
+            ghcr.io/calcom/cal.com
 
       - name: Copy env
         run: |
@@ -86,12 +98,10 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64
-          tags: |
-            docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:latest
-            docker.io/calcom/cal.com:latest
-            ghcr.io/calcom/web:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
