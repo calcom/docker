@@ -27,8 +27,6 @@
 
 # Docker
 
-NOTE: DockerHub organization has not yet been renamed.
-
 This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com](https://hub.docker.com/r/calcom/cal.com)
 
 The Docker configuration for Cal.com is an effort powered by people within the community. Cal.com, Inc. does not yet provide official support for Docker, but we will accept fixes and documentation at this time. Use at your own risk.
