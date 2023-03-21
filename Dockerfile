@@ -32,7 +32,11 @@ RUN yarn config set httpTimeout 1200000 && \
 
 RUN yarn turbo run build --filter=@calcom/web
 
-FROM node:18 as runner
+# RUN yarn plugin import workspace-tools && \
+#     yarn workspaces focus --all --production
+RUN rm -rf node_modules/.cache .yarn/cache apps/web/.next/cache
+
+FROM node:18 as builder-two
 
 WORKDIR /calcom
 ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
@@ -54,5 +58,15 @@ ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
 
 RUN scripts/replace-placeholder.sh http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER ${NEXT_PUBLIC_WEBAPP_URL}
 
+FROM node:18 as runner
+
+
+WORKDIR /calcom
+COPY --from=builder-two /calcom ./
+ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
+ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
+    BUILT_NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL
+
+ENV NODE_ENV production
 EXPOSE 3000
 CMD ["/calcom/scripts/start.sh"]
