@@ -79,7 +79,7 @@ jobs:
 
       - name: Start database
         run: |
-          docker compose up -d database
+          docker-compose up -d database
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
