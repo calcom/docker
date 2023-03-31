@@ -99,10 +99,18 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
 =======
           push: true
+<<<<<<< HEAD
 >>>>>>> f652dce (enable push)
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+=======
+          platforms: linux/arm64
+          tags: |
+            docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/calendso:canary
+            docker.io/calcom/cal.com:canary
+            ghcr.io/calcom/web:canary
+>>>>>>> 2dfa73c (temporarily remove amd64)
           build-args: |
             NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
