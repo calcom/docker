@@ -81,9 +81,20 @@ jobs:
         run: |
           docker-compose up -d database
           
+      - name: Start database
+        run: |
+          docker-compose up -d database
+          
+      - name: Create builder
+        run: docker context create builders
+      
+      - name: Use builder
+        run: docker context use builders
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
+          endpoint: builders
           driver-opts: |
             network=container:database
           buildkitd-flags: |
