@@ -1,64 +1,107 @@
-# Use postgres/example user/password credentials
 version: '3.8'
 
-volumes:
-  database-data:
-
 networks:
-  stack:
-    name: stack
+  public:
+    name: ${COMPOSE_PROJECT_NAME}-public
+  private:
+    name: ${COMPOSE_PROJECT_NAME}-private
     external: false
+  # stack:
+  #   name: stack
+  #   external: false
 
 services:
-  database:
-    container_name: database
-    image: postgres
-    restart: always
-    volumes:
-      - database-data:/var/lib/postgresql/data/
-    env_file: .env
-    networks:
-      - stack
-
-  calcom:
-    image: calcom.docker.scarf.sh/calcom/cal.com
+  server:
+    container_name: ${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}
+    image: calcom.docker.scarf.sh/calcom/cal.com:${SERVER_VERSION}
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
-        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
-        CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED}
+        NEXT_PUBLIC_WEBAPP_URL: https://${SERVER_SUBDOMAIN}.${HOSTNAME}
+        NEXT_PUBLIC_LICENSE_CONSENT: true
+        CALCOM_TELEMETRY_DISABLED: 1
         NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
-        DATABASE_URL: ${DATABASE_URL}
-      network: stack
-    restart: always
+        DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@${DB_SUBDOMAIN}:5432/${COMPOSE_PROJECT_NAME}
+      network: ${COMPOSE_PROJECT_NAME}-private
+    restart: unless-stopped
     networks:
-      - stack
-    ports:
-      - 3000:3000
-    env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-    depends_on:
-      - database
+      - private
+      - public
+    expose:
+      - 3000
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${COMPOSE_PROJECT_NAME}-public
+      
+      ### Entrypoints ###
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.entrypoints=http,https
 
-# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
-  studio:
-    image: calcom.docker.scarf.sh/calcom/cal.com
-    restart: always
-    networks:
-      - stack
-    ports:
-      - 5555:5555
-    env_file: .env
+      ### Routers ###
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.rule=Host(`${SERVER_SUBDOMAIN}.${HOSTNAME}`)
+
+      ### Middlewares ###
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.middlewares=redirect->https@file
+
+      ### TLS ###
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.tls=true
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.tls.certresolver=letsencrypt
+
+      ### Service ###
+      - traefik.http.routers.router->${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.service=${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}
+      - traefik.http.services.${COMPOSE_PROJECT_NAME}-${SERVER_SUBDOMAIN}.loadbalancer.server.port=3000
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@${DB_SUBDOMAIN}:5432/${COMPOSE_PROJECT_NAME}
+      NEXT_PUBLIC_WEBAPP_URL: https://${SERVER_SUBDOMAIN}.${HOSTNAME}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
+      GOOGLE_API_CREDENTIALS: ${GOOGLE_API_CREDENTIALS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_SERVER_HOST: ${EMAIL_SERVER_HOST}
+      EMAIL_SERVER_PORT: ${EMAIL_SERVER_PORT}
+      EMAIL_SERVER_USER: ${EMAIL_SERVER_USER}
+      EMAIL_SERVER_PASSWORD: ${EMAIL_SERVER_PASSWORD}
     depends_on:
-      - database
-    command:
-      - npx
-      - prisma
-      - studio
-# END SECTION: Optional use of Prisma Studio.
+      - db
+  
+  db:
+    container_name: ${COMPOSE_PROJECT_NAME}-${DB_SUBDOMAIN}
+    image: postgres:${DB_VERSION}
+    restart: unless-stopped
+    networks:
+      - private
+    expose:
+      - 5432
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./db/data:/var/lib/postgresql/data/
+    # env_file: .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${COMPOSE_PROJECT_NAME}
+
+# # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
+#   studio:
+#     image: calcom.docker.scarf.sh/calcom/cal.com
+#     restart: always
+#     networks:
+#       - stack
+#     ports:
+#       - 5555:5555
+#     env_file: .env
+#     environment:
+#       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+#     depends_on:
+#       - database
+#     command:
+#       - npx
+#       - prisma
+#       - studio
+# # END SECTION: Optional use of Prisma Studio.
+
+volumes:
+  db:
+    name: ${COMPOSE_PROJECT_NAME}-${DB_SUBDOMAIN}
