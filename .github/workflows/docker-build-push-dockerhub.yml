@@ -79,11 +79,7 @@ jobs:
 
       - name: Start database
         run: |
-          docker-compose up -d database
-          
-      - name: Start database
-        run: |
-          docker-compose up -d database
+          docker compose up -d database
           
       - name: Create builder
         run: docker context create builders
