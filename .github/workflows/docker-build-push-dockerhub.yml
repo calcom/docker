@@ -23,28 +23,25 @@ on:
   # release:
     # types: [ created ]
 
-  # # Allows you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Git submodule update
         run: |
           git submodule update --init
 
       - name: Log in to the Docker Hub registry
-        uses: docker/login-action@v1.10.0
+        uses: docker/login-action@v2
         with:
           # Username used to log against the Docker registry
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -54,7 +51,7 @@ jobs:
           logout: true # optional, default is true
 
       - name: Log in to the Github Container registry
-        uses: docker/login-action@v1.10.0
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -77,8 +74,8 @@ jobs:
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
 
       # Temporarily disable ARM build due to runner performance issues
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v2
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v2
 
       - name: Start database
         run: |
@@ -91,15 +88,18 @@ jobs:
             network=container:database
           buildkitd-flags: |
             --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+          config-inline: |
+            [worker.oci]
+              max-parallelism = 1
           
       - name: Build and push image
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ./
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
