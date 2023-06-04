@@ -88,9 +88,9 @@ jobs:
             network=container:database
           buildkitd-flags: |
             --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
-          config-inline: |
-            [worker.oci]
-              max-parallelism = 1
+#           config-inline: |
+#             [worker.oci]
+#               max-parallelism = 1
           
       - name: Build and push image
         id: docker_build
