@@ -56,7 +56,7 @@ ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
 
 RUN scripts/replace-placeholder.sh http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER ${NEXT_PUBLIC_WEBAPP_URL}
 
-FROM --platform=$BUILDPLATFORM node:18 as runner
+FROM --platform=$TARGETPLATFORM node:18 as runner
 
 
 WORKDIR /calcom
