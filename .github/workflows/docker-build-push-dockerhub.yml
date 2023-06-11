@@ -61,6 +61,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          flavor: |
+            suffix=-arm
           images: |
             docker.io/calendso/calendso
             docker.io/calcom/cal.com
