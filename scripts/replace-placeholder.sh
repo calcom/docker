@@ -1,3 +1,5 @@
+#!/bin/sh
+
 FROM=$1
 TO=$2
 
@@ -11,6 +13,6 @@ fi
 echo "Replacing all statically built instances of $FROM with $TO."
 
 find apps/web/.next/ apps/web/public -type f |
-while read file; do
+while read -r file; do
     sed -i "s|$FROM|$TO|g" "$file"
 done
