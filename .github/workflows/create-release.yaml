@@ -25,7 +25,7 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "actions-user"
-          git submodule update --init
+          git submodule update --init --remote
           git checkout -b 'release-${{ inputs.RELEASE_TAG }}'
           (cd calcom && git checkout '${{ inputs.RELEASE_TAG }}')
           git add calcom
