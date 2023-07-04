@@ -32,10 +32,12 @@ jobs:
           git commit -m "tag version Cal.com version ${{ inputs.RELEASE_TAG }}"
           git push origin 'release-${{ inputs.RELEASE_TAG }}'
 
+      # note: instead of secrets.GITHUB_TOKEN here, we need to use a PAT 
+      #       so that the release creation triggers the image build workflow
       - name: "Create release"
         uses: "actions/github-script@v6"
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.ACTIONS_ACCESS_TOKEN }}"
           script: |
             try {
               const response = await github.rest.repos.createRelease({
