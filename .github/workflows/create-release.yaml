@@ -27,7 +27,7 @@ jobs:
           git config user.name "actions-user"
           git submodule update --init --remote
           git checkout -b 'release-${{ inputs.RELEASE_TAG }}'
-          (cd calcom && ls && git pull && git checkout '${{ inputs.RELEASE_TAG }}')
+          (cd calcom && git checkout ${{ inputs.RELEASE_TAG }})
           git add calcom
           git commit -m "tag version Cal.com version ${{ inputs.RELEASE_TAG }}"
           git push origin 'release-${{ inputs.RELEASE_TAG }}'
