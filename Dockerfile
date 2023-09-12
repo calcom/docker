@@ -21,6 +21,7 @@ COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.c
 COPY calcom/.yarn ./.yarn
 COPY calcom/apps/web ./apps/web
 COPY calcom/packages ./packages
+COPY calcom/tests ./tests
 
 RUN yarn config set httpTimeout 1200000 && \ 
     npx turbo prune --scope=@calcom/web --docker && \
