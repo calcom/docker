@@ -41,7 +41,7 @@ jobs:
           git submodule update --init
 
       - name: Log in to the Docker Hub registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           # Username used to log against the Docker registry
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -51,7 +51,7 @@ jobs:
           logout: true # optional, default is true
 
       - name: Log in to the Github Container registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
