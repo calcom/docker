@@ -107,6 +107,13 @@ jobs:
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+
+      - name: Upload build log on failure
+        if: steps.docker_build.outputs.exit_code != '0'
+        uses: actions/upload-artifact@v2
+        with:
+          name: build.log
+          path: build.log
             
       # - name: Build with docker compose
       #   run: |
@@ -115,6 +122,13 @@ jobs:
       - name: Test runtime
         run: |
           docker run --rm -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} ${{ steps.docker_build.outputs.digest }}
+      
+      - name: Upload runtime log on failure
+        if: steps.test_runtime.outputs.exit_code != '0'
+        uses: actions/upload-artifact@v2
+        with:
+          name: runtime.log
+          path: runtime.log
 
       - name: Cleanup
         run: |
