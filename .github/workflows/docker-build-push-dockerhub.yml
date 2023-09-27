@@ -112,6 +112,10 @@ jobs:
       #   run: |
       #     DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
+      - name: Test runtime
+        run: |
+          docker run --rm -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} ${{ steps.docker_build.outputs.digest }}
+
       - name: Cleanup
         run: |
           docker compose down
