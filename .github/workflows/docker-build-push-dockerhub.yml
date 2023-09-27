@@ -76,10 +76,14 @@ jobs:
       # Temporarily disable ARM build due to runner performance issues
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v2
+      - name: Create Docker network
+        run: |
+          docker network create common_network
+
 
       - name: Start database
         run: |
-          docker compose up -d database
+          docker compose up -d database --network common_network
           
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -109,6 +113,7 @@ jobs:
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+          network: common_network
 
       - name: Upload build log on failure
         if: steps.docker_build.outputs.exit_code != '0'
@@ -123,7 +128,7 @@ jobs:
 
       - name: Test runtime
         run: |
-          docker run --rm -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} docker.io/calcom/cal.com:add-runtime-check
+          docker run --rm --network common_network -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} docker.io/calcom/cal.com:add-runtime-check
       
       - name: Upload runtime log on failure
         if: steps.test_runtime.outputs.exit_code != '0'
