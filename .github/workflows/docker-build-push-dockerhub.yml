@@ -76,10 +76,6 @@ jobs:
       # Temporarily disable ARM build due to runner performance issues
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v2
-      - name: Create Docker network
-        run: |
-          docker network create
-
 
       - name: Start database
         run: |
