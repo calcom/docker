@@ -123,7 +123,7 @@ jobs:
 
       - name: Test runtime
         run: |
-          docker run --rm -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} ${{ steps.docker_build.outputs.digest }}
+          docker run --rm -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} docker.io/calcom/cal.com:add-runtime-check
       
       - name: Upload runtime log on failure
         if: steps.test_runtime.outputs.exit_code != '0'
