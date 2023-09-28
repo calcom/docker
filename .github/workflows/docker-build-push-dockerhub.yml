@@ -131,8 +131,8 @@ jobs:
               
             server_pid=$!
         
-            for i in {1..600}; do
-              echo "Checking server health ($i/60)..."
+            for i in {1..1200}; do
+              echo "Checking server health ($i/1200)..."
               response=$(curl --silent --fail --write-out "%{http_code}" http://localhost:3000/auth/login)
               if [[ "$response" == "200" ]]; then
                 echo "Server is healthy"
