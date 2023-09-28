@@ -130,6 +130,10 @@ jobs:
               docker.io/calcom/cal.com:add-runtime-check &
               
             server_pid=$!
+
+
+            echo "Waiting for the server to start..."
+            sleep 120
         
             for i in {1..1200}; do
               echo "Checking server health ($i/1200)..."
