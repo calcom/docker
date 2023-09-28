@@ -141,7 +141,7 @@ jobs:
             for i in {1..1200}; do
               echo "Checking server health ($i/1200)..."
               response=$(curl --silent --fail --write-out "%{http_code}" -v ${{ env.NEXT_PUBLIC_WEBAPP_URL }}/auth/login)
-              if [[ "$response" == "200" ]]; then
+              if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
                 kill $server_pid
