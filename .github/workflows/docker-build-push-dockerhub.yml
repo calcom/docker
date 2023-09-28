@@ -125,11 +125,11 @@ jobs:
         run: |
           docker run --rm --network stack \
             -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-            -e NEXTAUTH_URL=${{ env.NEXTAUTH_URL }} \
+            -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
             -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
             docker.io/calcom/cal.com:add-runtime-check
         env:
-          NEXTAUTH_URL: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
+          NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
       
       - name: Upload runtime log on failure
