@@ -91,16 +91,15 @@ jobs:
 #           config-inline: |
 #             [worker.oci]
 #               max-parallelism = 1
-          
-      - name: Build and push image
+
+      - name: Build image
         id: docker_build
         uses: docker/build-push-action@v4
         with:
           context: ./
           file: ./Dockerfile
-          # load: true
-          # push: false 
-          push: ${{ github.event_name != 'pull_request' }}
+          load: true  # Load the image into the Docker daemon
+          push: false  # Do not push the image at this stage
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -109,19 +108,23 @@ jobs:
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
-            
+                      
       # - name: Build with docker compose
       #   run: |
       #     DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
       - name: Test runtime
         run: |
-            docker run --rm --network stack \
-              -p 3000:3000 \
-              -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-              -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
-              -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
-              docker.io/calcom/cal.com:add-runtime-check &
+          tags="${{ steps.meta.outputs.tags }}"
+          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+          tag=${ADDR[0]}  # Get the first tag
+      
+          docker run --rm --network stack \
+            -p 3000:3000 \
+            -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
+            -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
+            -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
+            $tag &
               
             server_pid=$!
 
@@ -150,6 +153,23 @@ jobs:
         env:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
+
+
+      - name: Push image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          # push: ${{ github.event_name != 'pull_request' }}
+          push: false
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          run: |
+            tags="${{ steps.meta.outputs.tags }}"
+            IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+            tag=${ADDR[0]}  # Get the first tag
+          
+            docker push $tag
 
       - name: Cleanup
         run: |
