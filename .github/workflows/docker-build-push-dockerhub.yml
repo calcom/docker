@@ -156,20 +156,13 @@ jobs:
 
 
       - name: Push image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          # push: ${{ github.event_name != 'pull_request' }}
-          push: false
-          platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          run: |
-            tags="${{ steps.meta.outputs.tags }}"
-            IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-            tag=${ADDR[0]}  # Get the first tag
+        run: |
+          tags="${{ steps.meta.outputs.tags }}"
+          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+          tag=${ADDR[0]}  # Get the first tag
           
-            docker push $tag
+          docker push $tag
+
 
       - name: Cleanup
         run: |
