@@ -164,13 +164,13 @@ jobs:
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
 
 
-      - name: Push image
-        run: |
-          tags="${{ steps.meta.outputs.tags }}"
-          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-          tag=${ADDR[0]}  # Get the first tag
+      # - name: Push image
+      #   run: |
+      #     tags="${{ steps.meta.outputs.tags }}"
+      #     IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+      #     tag=${ADDR[0]}  # Get the first tag
           
-          docker push $tag
+      #     docker push $tag
 
 
       - name: Cleanup
