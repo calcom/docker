@@ -18,10 +18,12 @@ on:
   # Allow running workflow manually from the Actions tab
   # workflow_dispatch:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to build'     
-        required: true
+    # Uncomment below to allow specific version workflow run
+    # inputs:
+    #   version:
+    #     description: 'Version to build'     
+    #     required: true
+
 # Leaving in example for releases. Initially we simply push to 'latest'
 # on:
   # release:
@@ -36,14 +38,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code at specified version
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.version }}
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it, uncomment below
+      # - name: Checkout code at specified version
+      #   uses: actions/checkout@v2
+      #   with:
+      #     ref: ${{ github.event.inputs.version }}
 
-      # - name: checkout
-      #   uses: actions/checkout@v3
+      - name: checkout
+        uses: actions/checkout@v3
 
       - name: Git submodule update
         run: |
@@ -163,14 +165,13 @@ jobs:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
 
-
-      # - name: Push image
-      #   run: |
-      #     tags="${{ steps.meta.outputs.tags }}"
-      #     IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-      #     tag=${ADDR[0]}  # Get the first tag
+      - name: Push image
+        run: |
+          tags="${{ steps.meta.outputs.tags }}"
+          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+          tag=${ADDR[0]}  # Get the first tag
           
-      #     docker push $tag
+          docker push $tag
 
 
       - name: Cleanup
