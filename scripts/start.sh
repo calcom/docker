@@ -1,4 +1,5 @@
 #!/bin/sh
+
 if [ -n "${CALCOM_LICENSE_KEY_FILE}" ]; then
   CALCOM_LICENSE_KEY=$(cat "$CALCOM_LICENSE_KEY_FILE")
   export CALCOM_LICENSE_KEY

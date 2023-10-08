@@ -10,6 +10,15 @@ networks:
     external: false
 
 services:
+  adminer:
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    image: adminer:latest
+    networks:
+      - stack
+    ports:
+      - 8080:8080
+
   database:
     container_name: database
     image: postgres
