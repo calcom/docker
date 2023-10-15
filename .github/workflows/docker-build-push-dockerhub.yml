@@ -118,10 +118,6 @@ jobs:
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
-                      
-      # - name: Build with docker compose
-      #   run: |
-      #     DOCKER_BUILDKIT=0 docker compose build --build-arg DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }} calcom
 
       - name: Test runtime
         run: |
@@ -163,19 +159,34 @@ jobs:
         env:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
-
-      - name: Push image
-        run: |
-          tags="${{ steps.meta.outputs.tags }}"
-          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-          for tag in "${ADDR[@]}"; do
-            docker push $tag
-          done
-
-
+          
       - name: Cleanup
         run: |
           docker compose down
+
+      # - name: Push image
+      #   run: |
+      #     tags="${{ steps.meta.outputs.tags }}"
+      #     IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+      #     for tag in "${ADDR[@]}"; do
+      #       docker push $tag
+      #     done
+
+      - name: Push image
+        id: docker_push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true 
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+            NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
+            NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
+            DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
