@@ -168,9 +168,9 @@ jobs:
         run: |
           tags="${{ steps.meta.outputs.tags }}"
           IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-          tag=${ADDR[0]}  # Get the first tag
-          
-          docker push $tag
+          for tag in "${ADDR[@]}"; do
+            docker push $tag
+          done
 
 
       - name: Cleanup
