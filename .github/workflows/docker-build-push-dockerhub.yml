@@ -160,9 +160,6 @@ jobs:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
           
-      - name: Cleanup
-        run: |
-          docker compose down
 
       # - name: Push image
       #   run: |
@@ -190,3 +187,7 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+        
+      - name: Cleanup
+        run: |
+          docker compose down
