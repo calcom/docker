@@ -1,8 +1,13 @@
-# Use postgres/example user/password credentials
 version: '3.8'
 
 volumes:
   database-data:
+
+secrets:
+  calcom-environment:
+    file: .env
+  postgres-password:
+    environment: "POSTGRES_PASSWORD"
 
 networks:
   stack:
@@ -12,37 +17,45 @@ networks:
 services:
   database:
     container_name: database
-    image: postgres
-    restart: always
-    volumes:
-      - database-data:/var/lib/postgresql/data/
-    env_file: .env
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+      POSTGRES_USER: ${POSTGRES_USER}
+    image: postgres:16-alpine
     networks:
       - stack
+    restart: on-failure:5
+    secrets:
+      - postgres-password
+    volumes:
+      - database-data:/var/lib/postgresql/data/
 
   calcom:
-    image: calcom.docker.scarf.sh/calcom/cal.com
     build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
-        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
-        CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED}
-        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
-        DATABASE_URL: ${DATABASE_URL}
-      network: stack
-    restart: always
+      secrets:
+        - calcom-environment
+    cap_drop:
+      - ALL
+    container_name: calcom
+    cpu_shares: 128
+    depends_on:
+      - database
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    mem_limit: 1G
     networks:
       - stack
     ports:
-      - 3000:3000
-    env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-    depends_on:
-      - database
+      - "3000:3000"
+    pids_limit: 100
+    read_only: true
+    restart: on-failure:5
+    secrets:
+      - source: calcom-environment
+        target: /cal.com/.env
+    security_opt:
+      - no-new-privileges=true
+    tmpfs:
+      - /cal.com/node_modules/.cache
+      - /tmp/
 
 # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
