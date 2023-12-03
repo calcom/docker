@@ -17,8 +17,8 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data/
     env_file: .env.database
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     networks:
       - stack
 
@@ -30,8 +30,6 @@ services:
     volumes:
       - .env:/calcom/.env
       - .env.appStore:/calcom/.env.appStore
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
     ports:
       - 3000:3000
     networks:
