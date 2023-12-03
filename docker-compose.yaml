@@ -5,6 +5,13 @@ x-postgres-user: &postgres_user postgres
 x-postgres-password: &postgres_password postgres
 x-postgres-db: &postgres_db calendso
 x-database-host: &database_host localhost:5432
+x-database-url: &database_url postgresql://*postgres_user:*postgres_password@*database_host/*postgres_db
+
+x-calcom-telemetry-disabled: calcom_telemetry_disabled
+x-calendso-encryption-key: calendso_encryption_key
+x-nextauth-secret: nextauth_secret
+x-next-public-webapp-url: next_public_webapp_url
+
 x-public-license-consent: &public_license_consent "this variable is sentenced to be removed according to #4052"
 
 volumes:
@@ -32,12 +39,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
+        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL:-*next_public_webapp_url}
         NEXT_PUBLIC_LICENSE_CONSENT: *public_license_consent
-        CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED}
-        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
-        DATABASE_URL: ${DATABASE_URL}
+        CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED:-*calcom_telemtry_disabled}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-*nextauth_secret}
+        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY:-*calendso_encryption_key}
+        DATABASE_URL: ${DATABASE_URL:-*database_url}
       network: stack
     restart: always
     networks:
