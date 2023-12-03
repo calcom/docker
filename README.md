@@ -55,6 +55,12 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
    git clone https://github.com/calcom/docker.git
    ```
 
+   Alternatively, you can also use the --recursive flag to clone git submodules.
+
+   ```bash
+   git clone --recursive https://github.com/calcom/docker.git
+   ```
+
 2. Change into the directory
 
    ```bash
@@ -150,7 +156,13 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
    Note: DO NOT use recursive submodule update, otherwise you will receive a git authentication error.
 
-4. Rename `.env.example` to `.env` and then update `.env`
+4. Rename `.env.*` files and then update them:
+
+   ```bash
+   cp calcom/.env.example .env
+   cp calcom/.env.appStore.example .env.appStore
+   cp .env.database.example .env.database
+   ```
 
    For configuration options see [Build-time variables](#build-time-variables) below. Update the appropriate values in your .env file, then proceed.
 
