@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Setup database
-yarn db-deploy
-yarn --cwd packages/prisma seed-app-store
+yarn workspace @calcom/prisma db-deploy
+yarn workspace @calcom/prisma seed-app-store
 
 # Build project
-yarn turbo run build --filter=@calcom/web
+yarn build
 
 # Start server
 yarn start
