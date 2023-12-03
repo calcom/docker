@@ -19,11 +19,6 @@ services:
     env_file: .env.database
     ports:
       - 5432:5432
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - stack
 
@@ -42,5 +37,4 @@ services:
     networks:
       - stack
     depends_on:
-      database:
-        condition: service_healthy
+      - database
