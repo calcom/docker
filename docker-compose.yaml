@@ -1,6 +1,12 @@
 # Use postgres/example user/password credentials
 version: '3.8'
 
+x-postgres-user: &postgres_user postgres
+x-postgres-password: &postgres_password postgres
+x-postgres-db: &postgres_db calendso
+x-database-host: &database_host localhost:5432
+x-public-license-consent: &public_license_consent "this variable is sentenced to be removed according to #4052"
+
 volumes:
   database-data:
 
@@ -27,7 +33,7 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
-        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
+        NEXT_PUBLIC_LICENSE_CONSENT: *public_license_consent
         CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED}
         NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
@@ -40,7 +46,7 @@ services:
       - 3000:3000
     env_file: .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-*postgres_user}:${POSTGRES_PASSWORD:-*postgres_password}@${DATABASE_HOST:-*database_host}/${POSTGRES_DB:-*postgres_db}
     depends_on:
       - database
 
@@ -54,7 +60,7 @@ services:
       - 5555:5555
     env_file: .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-*postgres_user}:${POSTGRES_PASSWORD:-*postgres_password}@${DATABASE_HOST:-*database_host}/${POSTGRES_DB:-*postgres_db}
     depends_on:
       - database
     command:
