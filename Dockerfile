@@ -8,6 +8,8 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     NEXTAUTH_SECRET=NEXTAUTH_SECRET_PLACEHOLDER \
     CALENDSO_ENCRYPTION_KEY=CALENDSO_ENCRYPTION_KEY_PLACEHOLDER \
     NODE_ENV=production \
+    CI=true \
+    DISABLE_ESLINT_PLUGIN=true \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE}
 
 COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh ./
