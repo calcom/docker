@@ -67,24 +67,24 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cp .env.example .env
     ```
 
-    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
-    
+    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below.
+
     Update the appropriate values in your .env file, then proceed.
-    
+
 4. (optional) Pre-Pull the images by running the following command:
-    
+
     ```bash
     docker compose pull
     ```
-    
+
     This will use the default image locations as specified by `image:` in the docker-compose.yaml file.
-    
+
     Note: To aid with support, by default Scarf.sh is used as registry proxy for download metrics.
-    
+
 5. Start Cal.com via docker compose
 
     (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
-    
+
     ```bash
     docker compose up -d
     ```
@@ -139,34 +139,14 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd calcom-docker
     ```
 
-3. Update the calcom submodule. 
-
-    ```bash
-    git submodule update --remote --init
-    ```
-
-    Note: DO NOT use recursive submodule update, otherwise you will receive a git authentication error.
-
 4. Rename `.env.example` to `.env` and then update `.env`
 
     For configuration options see [Build-time variables](#build-time-variables) below. Update the appropriate values in your .env file, then proceed.
 
-5. Build the Cal.com docker image: 
-
-    Note: Due to application configuration requirements, an available database is currently required during the build process.
-
-    a) If hosting elsewhere, configure the `DATABASE_URL` in the .env file, and skip the next step
-
-    b) If a local or temporary database is required, start a local database via docker compose.
+6. Build Cal.com via docker compose
 
     ```bash
-    docker compose up -d database
-    ```
-
-6. Build Cal.com via docker compose (DOCKER_BUILDKIT=0 must be provided to allow a network bridge to be used at build time. This requirement will be removed in the future)
-
-    ```bash
-    DOCKER_BUILDKIT=0 docker compose build calcom
+    docker compose build calcom
     ```
 
 7. Start Cal.com via docker compose
@@ -210,9 +190,9 @@ These variables must also be provided at runtime
 
 ### Build-time variables
 
-If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
+If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com)
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
@@ -223,18 +203,6 @@ Updating these variables is not required for evaluation, but is required for run
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
 
-## Git Submodules
-
-This repository uses a git submodule.
-
-For users building their own images, to update the calcom submodule, use the following command:
-
-```bash
-git submodule update --remote --init
-```
-
-For more advanced usage, please refer to the git documentation: [https://git-scm.com/book/en/v2/Git-Tools-Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
-
 ## Troubleshooting
 
 ### SSL edge termination
@@ -243,13 +211,13 @@ If running behind a load balancer which handles SSL certificates, you will need 
 
 ### Failed to commit changes: Invalid 'prisma.user.create()'
 
-Certain versions may have trouble creating a user if the field `metadata` is empty. Using an empty json object `{}` as the field value should resolve this issue. Also, the `id` field will autoincrement, so you may also try leaving the value of `id` as empty.
+Certain versions may have trouble creating a user if the field `metadata` is empty. Using an empty json object `{}` as the field value should resolve this issue. Also, the `id` field will auto-increment, so you may also try leaving the value of `id` as empty.
 
 ### CLIENT_FETCH_ERROR
 
 If you experience this error, it may be the way the default Auth callback in the server is using the WEBAPP_URL as a base url. The container does not necessarily have access to the same DNS as your local machine, and therefor needs to be configured to resolve to itself. You may be able to correct this by configuring `NEXTAUTH_URL=http://localhost:3000/api/auth`, to help the backend loop back to itself.
 ```
-docker-calcom-1  | @calcom/web:start: [next-auth][error][CLIENT_FETCH_ERROR] 
+docker-calcom-1  | @calcom/web:start: [next-auth][error][CLIENT_FETCH_ERROR]
 docker-calcom-1  | @calcom/web:start: https://next-auth.js.org/errors#client_fetch_error request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost {
 docker-calcom-1  | @calcom/web:start:   error: {
 docker-calcom-1  | @calcom/web:start:     message: 'request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost',
