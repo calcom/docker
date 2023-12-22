@@ -75,6 +75,10 @@ jobs:
             docker.io/calendso/calendso
             docker.io/calcom/cal.com
             ghcr.io/calcom/cal.com
+          # Add flavor latest only on full releases, not on pre-releases
+          flavor: |
+            latest=${{ !github.event.release.prerelease }}
+            prerelease=${{ github.event.release.prerelease }}
 
       - name: Copy env
         run: |
@@ -184,7 +188,8 @@ jobs:
             NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
             NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
             DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
-
+        if: ${{ !github.event.release.prerelease }}
+        
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
         
