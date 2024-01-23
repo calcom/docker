@@ -78,7 +78,6 @@ jobs:
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
             latest=${{ !github.event.release.prerelease }}
-            prerelease=${{ github.event.release.prerelease }}
 
       - name: Copy env
         run: |
