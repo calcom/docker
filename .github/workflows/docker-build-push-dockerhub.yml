@@ -77,8 +77,8 @@ jobs:
             ghcr.io/calcom/cal.com
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
-            latest=${{ !github.event.release.prerelease }}
-            prerelease=${{ !!github.event.release.prerelease }}
+            latest=${{ github.event_name != 'release' || !github.event.release.prerelease }}
+            prerelease=${{ github.event_name == 'release' && github.event.release.prerelease }}
 
       - name: Copy env
         run: |
