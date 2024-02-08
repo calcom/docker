@@ -206,8 +206,8 @@ These variables must also be provided at runtime
 | NEXTAUTH_URL | Location of the auth server. By default, this is the Cal.com docker instance itself. | optional | `{NEXT_PUBLIC_WEBAPP_URL}/api/auth` |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
-| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` or `postgresql://unicorn_user:magical_password@poolerurl:5432/calendso` |
+| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 
 ### Build-time variables
 
@@ -220,7 +220,8 @@ Updating these variables is not required for evaluation, but is required for run
 | NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
 | CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
-| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
 
