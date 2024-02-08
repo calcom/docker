@@ -67,24 +67,24 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cp .env.example .env
     ```
 
-    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below. 
-    
+    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below.
+
     Update the appropriate values in your .env file, then proceed.
-    
+
 4. (optional) Pre-Pull the images by running the following command:
-    
+
     ```bash
     docker compose pull
     ```
-    
+
     This will use the default image locations as specified by `image:` in the docker-compose.yaml file.
-    
+
     Note: To aid with support, by default Scarf.sh is used as registry proxy for download metrics.
-    
+
 5. Start Cal.com via docker compose
 
     (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
-    
+
     ```bash
     docker compose up -d
     ```
@@ -139,7 +139,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd calcom-docker
     ```
 
-3. Update the calcom submodule. 
+3. Update the calcom submodule.
 
     ```bash
     git submodule update --remote --init
@@ -151,7 +151,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     For configuration options see [Build-time variables](#build-time-variables) below. Update the appropriate values in your .env file, then proceed.
 
-5. Build the Cal.com docker image: 
+5. Build the Cal.com docker image:
 
     Note: Due to application configuration requirements, an available database is currently required during the build process.
 
@@ -206,20 +206,22 @@ These variables must also be provided at runtime
 | NEXTAUTH_URL | Location of the auth server. By default, this is the Cal.com docker instance itself. | optional | `{NEXT_PUBLIC_WEBAPP_URL}/api/auth` |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
-| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 
 ### Build-time variables
 
-If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image. 
+If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com) 
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com)
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
 | NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
 | CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
-| DATABASE_URL | database url with credentials | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
+| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
 
@@ -249,7 +251,7 @@ Certain versions may have trouble creating a user if the field `metadata` is emp
 
 If you experience this error, it may be the way the default Auth callback in the server is using the WEBAPP_URL as a base url. The container does not necessarily have access to the same DNS as your local machine, and therefor needs to be configured to resolve to itself. You may be able to correct this by configuring `NEXTAUTH_URL=http://localhost:3000/api/auth`, to help the backend loop back to itself.
 ```
-docker-calcom-1  | @calcom/web:start: [next-auth][error][CLIENT_FETCH_ERROR] 
+docker-calcom-1  | @calcom/web:start: [next-auth][error][CLIENT_FETCH_ERROR]
 docker-calcom-1  | @calcom/web:start: https://next-auth.js.org/errors#client_fetch_error request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost {
 docker-calcom-1  | @calcom/web:start:   error: {
 docker-calcom-1  | @calcom/web:start:     message: 'request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost',
