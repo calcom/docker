@@ -21,11 +21,12 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
 COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh ./
 COPY calcom/.yarn ./.yarn
 COPY calcom/apps/web ./apps/web
+COPY calcom/apps/api/v2 ./apps/api/v2
 COPY calcom/packages ./packages
 COPY calcom/tests ./tests
 
 RUN yarn config set httpTimeout 1200000
-# RUN npx turbo prune --scope=@calcom/web --docker
+RUN npx turbo prune --scope=@calcom/web --docker
 RUN yarn install
 RUN yarn db-deploy
 RUN yarn --cwd packages/prisma seed-app-store
