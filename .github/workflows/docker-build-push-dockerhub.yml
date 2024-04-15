@@ -106,12 +106,12 @@ jobs:
 #               max-parallelism = 1
 
       - name: List directories in the root
-        run: ls -alh
+        run: ls -alh calcom/
       
       # New cleanup step
       - name: Cleanup web directory
         run: |
-          cd apps/web
+          cd calcom/apps/web
           rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
           cd ../../
 
