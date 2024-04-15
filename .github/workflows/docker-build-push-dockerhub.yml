@@ -89,13 +89,6 @@ jobs:
       # Temporarily disable ARM build due to runner performance issues
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v2
-      
-      # New cleanup step
-      - name: Cleanup web directory
-        run: |
-          cd apps/web
-          rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
-          cd ../../
 
       - name: Start database
         run: |
@@ -111,6 +104,17 @@ jobs:
 #           config-inline: |
 #             [worker.oci]
 #               max-parallelism = 1
+
+      - name: List directories in the root
+        run: ls -alh
+      
+      # New cleanup step
+      - name: Cleanup web directory
+        run: |
+          cd apps/web
+          rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
+          cd ../../
+
 
       - name: Build image
         id: docker_build
