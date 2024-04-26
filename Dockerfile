@@ -32,7 +32,7 @@ RUN npx turbo prune --scope=@calcom/web --docker
 RUN yarn install
 RUN yarn db-deploy
 RUN yarn --cwd packages/prisma seed-app-store
-RUN yarn --cwd apps/web run build --filter=@calcom/web
+RUN yarn --cwd apps/web workspace @calcom/web run build
 
 # RUN yarn plugin import workspace-tools && \
 #     yarn workspaces focus --all --production
