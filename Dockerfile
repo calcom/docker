@@ -1,76 +1,78 @@
-FROM node:18 as builder
+FROM node:18-alpine AS base
 
-WORKDIR /calcom
+FROM base AS builder
+RUN apk add --no-cache libc6-compat
+RUN apk update
+# Set working directory
+WORKDIR /app
+RUN yarn global add turbo
+COPY calcom/. .
+RUN turbo prune @calcom/web --docker
+
+# Add lockfile and package.json's of isolated subworkspace
+FROM base AS installer
 
 ARG NEXT_PUBLIC_LICENSE_CONSENT
 ARG CALCOM_TELEMETRY_DISABLED
 ARG DATABASE_URL
 ARG NEXTAUTH_SECRET=secret
+ARG NEXT_PUBLIC_API_V2_URL
 ARG CALENDSO_ENCRYPTION_KEY=secret
 ARG MAX_OLD_SPACE_SIZE=4096
+ARG NEXT_PUBLIC_WEBAPP_URL
 
-ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
+ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
     NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
     CALCOM_TELEMETRY_DISABLED=$CALCOM_TELEMETRY_DISABLED \
     DATABASE_URL=$DATABASE_URL \
     DATABASE_DIRECT_URL=$DATABASE_URL \
     NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
+    NEXT_PUBLIC_API_V2_URL=${NEXT_PUBLIC_API_V2_URL} \
     CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY} \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE}
 
-COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh ./
-COPY calcom/.yarn ./.yarn
-COPY calcom/apps/web ./apps/web
+RUN apk add --no-cache libc6-compat
+RUN apk update
+WORKDIR /app
+
+# First install the dependencies (as they change less often)
+COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/yarn.lock ./yarn.lock
+
+# app-store packages aren't explicitly required but need to be available
 COPY calcom/packages ./packages
-COPY calcom/tests ./tests
 
-RUN yarn config set httpTimeout 1200000 && \ 
-    npx turbo prune --scope=@calcom/web --docker && \
-    yarn install && \
-    yarn db-deploy && \
-    yarn --cwd packages/prisma seed-app-store
+RUN yarn install
 
-RUN yarn turbo run build --filter=@calcom/web
+# Build the project
+COPY --from=builder /app/out/full/ .
 
-# RUN yarn plugin import workspace-tools && \
-#     yarn workspaces focus --all --production
-RUN rm -rf node_modules/.cache .yarn/cache apps/web/.next/cache
+# Disable linting and type checking in the next build
+ENV CI=1
 
-FROM node:18 as builder-two
+RUN yarn turbo run build --filter=@calcom/web...
 
-WORKDIR /calcom
-ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
+FROM base AS runner
+WORKDIR /app
 
-ENV NODE_ENV production
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
 
-COPY calcom/package.json calcom/.yarnrc.yml calcom/yarn.lock calcom/turbo.json ./
-COPY calcom/.yarn ./.yarn
-COPY --from=builder /calcom/node_modules ./node_modules
-COPY --from=builder /calcom/packages ./packages
-COPY --from=builder /calcom/apps/web ./apps/web
-COPY --from=builder /calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
-COPY scripts scripts
-
-# Save value used during this build stage. If NEXT_PUBLIC_WEBAPP_URL and BUILT_NEXT_PUBLIC_WEBAPP_URL differ at
-# run-time, then start.sh will find/replace static values again.
-ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
-    BUILT_NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL
-
-RUN scripts/replace-placeholder.sh http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER ${NEXT_PUBLIC_WEBAPP_URL}
-
-FROM node:18 as runner
+COPY --from=installer /app/apps/web/next.config.js .
+COPY --from=installer /app/apps/web/package.json .
 
 
-WORKDIR /calcom
-COPY --from=builder-two /calcom ./
-ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
-ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
-    BUILT_NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
-ENV NODE_ENV production
-EXPOSE 3000
+RUN yarn global add prisma
+COPY calcom/packages/prisma/schema.prisma .
 
-HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
-    CMD wget --spider http://localhost:3000 || exit 1
-
-CMD ["/calcom/scripts/start.sh"]
+# TODO: Consider adding seeding script here
+CMD ["sh", "-c", "$(yarn global bin)/prisma migrate deploy --schema=schema.prisma && node apps/web/server.js"]
