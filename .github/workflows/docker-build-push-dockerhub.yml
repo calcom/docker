@@ -18,10 +18,10 @@ on:
   # Allow running workflow manually from the Actions tab
   workflow_dispatch:
     # Uncomment below to allow specific version workflow run
-    inputs:
-      version:
-        description: 'Version to build'
-        required: true
+    # inputs:
+    #   version:
+    #     description: 'Version to build'
+    #     required: true
 
 # Leaving in example for releases. Initially we simply push to 'latest'
 # on:
@@ -42,11 +42,15 @@ jobs:
         with:
           # Free about 4.5 GB, elminating our disk space issues
           tool-cache: true
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it, uncomment below
-      - name: Checkout code at specified version
+      # - name: Checkout code at specified version
+      #   uses: actions/checkout@v2
+      #   with:
+      #     ref: ${{ github.event.inputs.version }}
+
+      - name: checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
 
       - name: Git submodule update
         run: |
