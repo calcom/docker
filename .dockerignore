@@ -1,4 +1,6 @@
 .git
-.github
 .env.example
-node_modules
+**/.github
+**/node_modules
+**/.next
+calcom/.yarn/cache
