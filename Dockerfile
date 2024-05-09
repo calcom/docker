@@ -72,7 +72,8 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/we
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 RUN yarn global add prisma
-COPY calcom/packages/prisma/schema.prisma .
+COPY calcom/packages/prisma/migrations/. ./prisma/migrations
+COPY calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
 
 # TODO: Consider adding seeding script here
-CMD ["sh", "-c", "$(yarn global bin)/prisma migrate deploy --schema=schema.prisma && node apps/web/server.js"]
+CMD ["sh", "-c", "$(yarn global bin)/prisma migrate deploy --schema=prisma/schema.prisma && node apps/web/server.js"]
