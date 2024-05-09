@@ -46,7 +46,7 @@ jobs:
       - name: Checkout code at specified version
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.version || github.ref }}
+          ref: ${{ github.ref }}
 
       - name: Git submodule update
         run: |
