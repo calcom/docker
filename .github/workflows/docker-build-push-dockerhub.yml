@@ -110,9 +110,6 @@ jobs:
 #             [worker.oci]
 #               max-parallelism = 1
 
-      - name: List directories in the root
-        run: ls -alh calcom/
-
       - name: Build image
         id: docker_build
         uses: docker/build-push-action@v5
