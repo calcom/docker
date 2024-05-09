@@ -40,8 +40,7 @@ jobs:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
         with:
-          # this might remove tools that are actually needed,
-          # when set to "true" but frees about 6 GB
+          # Free about 4.5 GB, elminating our disk space issues
           tool-cache: true
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it, uncomment below
       - name: Checkout code at specified version
@@ -114,14 +113,6 @@ jobs:
       - name: List directories in the root
         run: ls -alh calcom/
 
-      # # New cleanup step
-      # - name: Cleanup web directory
-      #   run: |
-      #     cd calcom/apps/web
-      #     rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
-      #     cd ../../
-
-
       - name: Build image
         id: docker_build
         uses: docker/build-push-action@v5
@@ -183,33 +174,32 @@ jobs:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
           CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
 
+      - name: Push image
+        run: |
+          tags="${{ steps.meta.outputs.tags }}"
+          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+          for tag in "${ADDR[@]}"; do
+            docker push $tag
+          done
 
-      # - name: Push image
-      #   run: |
-      #     tags="${{ steps.meta.outputs.tags }}"
-      #     IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-      #     for tag in "${ADDR[@]}"; do
-      #       docker push $tag
-      #     done
-
-      # - name: Push image
-      #   id: docker_push
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: ./
-      #     file: ./Dockerfile
-      #     push: true
-      #     platforms: linux/amd64
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.meta.outputs.labels }}
-      #     build-args: |
-      #       NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
-      #       NEXT_PUBLIC_API_V2_URL=${{ env.NEXT_PUBLIC_API_V2_URL }}
-      #       NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
-      #       NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
-      #       DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
-      #       DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
-      #   if: ${{ !github.event.release.prerelease }}
+      - name: Push image
+        id: docker_push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+            NEXT_PUBLIC_API_V2_URL=${{ env.NEXT_PUBLIC_API_V2_URL }}
+            NEXT_PUBLIC_LICENSE_CONSENT=${{ env.NEXT_PUBLIC_LICENSE_CONSENT }}
+            NEXT_PUBLIC_TELEMETRY_KEY=${{ env.NEXT_PUBLIC_TELEMETRY_KEY }}
+            DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+            DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@${{ env.DATABASE_HOST }}/${{ env.POSTGRES_DB }}
+        if: ${{ !github.event.release.prerelease }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
