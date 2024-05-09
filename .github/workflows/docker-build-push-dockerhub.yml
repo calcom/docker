@@ -44,12 +44,9 @@ jobs:
           tool-cache: true
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it, uncomment below
       - name: Checkout code at specified version
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.inputs.version }}
-
-      - name: checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version || github.ref }}
 
       - name: Git submodule update
         run: |
