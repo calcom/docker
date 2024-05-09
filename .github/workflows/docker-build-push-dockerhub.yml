@@ -114,12 +114,12 @@ jobs:
       - name: List directories in the root
         run: ls -alh calcom/
 
-      # New cleanup step
-      - name: Cleanup web directory
-        run: |
-          cd calcom/apps/web
-          rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
-          cd ../../
+      # # New cleanup step
+      # - name: Cleanup web directory
+      #   run: |
+      #     cd calcom/apps/web
+      #     rm -rf app/ components/PageWrapperAppDir.tsx lib/app-providers-app-dir.tsx .next/types/app/
+      #     cd ../../
 
 
       - name: Build image
