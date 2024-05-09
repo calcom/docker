@@ -30,6 +30,24 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  free-disk-space:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        # this might remove tools that are actually needed,
+        # when set to "true" but frees about 6 GB
+        tool-cache: true
+
+        # all of these default to true, but feel free to set to
+        # "false" if necessary for your workflow
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        swap-storage: true
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -107,7 +125,7 @@ jobs:
 
       - name: List directories in the root
         run: ls -alh calcom/
-      
+
       # New cleanup step
       - name: Cleanup web directory
         run: |
