@@ -83,6 +83,13 @@ jobs:
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
             latest=${{ !github.event.release.prerelease }}
+            
+      - name: Test runtime
+        run: |
+          tags="${{ steps.meta.outputs.tags }}"
+          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
+          tag=${ADDR[0]}  # Get the first tag
+          echo $tag
 
       - name: Copy env
         run: |
@@ -134,6 +141,7 @@ jobs:
           tags="${{ steps.meta.outputs.tags }}"
           IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
           tag=${ADDR[0]}  # Get the first tag
+          echo $tag
           container_name="calendso_container"
           
           docker run --rm --network stack --name "$container_name" \
