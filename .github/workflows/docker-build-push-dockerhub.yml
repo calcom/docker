@@ -79,17 +79,13 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            zaheerahmadopp/cal.com
+            docker.io/calendso/calendso
+            docker.io/calcom/cal.com
+            ghcr.io/calcom/cal.com
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
             latest=${{ !github.event.release.prerelease }}
-            
-      - name: Test runtime
-        run: |
-          tags="${{ steps.meta.outputs.tags }}"
-          IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
-          tag=${ADDR[0]}  # Get the first tag
-          echo $tag
+
 
       - name: Copy env
         run: |
@@ -151,16 +147,7 @@ jobs:
               -e NEXTAUTH_SECRET=EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA= \
               -e CALENDSO_ENCRYPTION_KEY=0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL \
               -d $tag
-          # docker run --rm --network stack \
-          #   -p 3000:3000 \
-          #   -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-          #   -e DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-          #   -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
-          #   -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
-          #   $tag &
-
-            #server_pid=$!
-
+          
 
             echo "Waiting for the server to start..."
             sleep 120
@@ -174,16 +161,15 @@ jobs:
               if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
+                sleep 20m
                 docker stop "$container_name"
-                #kill $server_pid
                 exit 0
               fi
               sleep 1
             done
 
             echo "Server health check failed"
-            #kill $server_pid
-            sleep 5m
+            sleep 20m
             docker stop "$container_name"
             
             exit 1
