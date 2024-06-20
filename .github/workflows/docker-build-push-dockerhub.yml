@@ -78,7 +78,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: |
+          # images: |
+          #   # docker.io/calendso/calendso
+          #   # docker.io/calcom/cal.com
+          #   # ghcr.io/calcom/cal.com
             zaheerahmadopp/cal.com
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
@@ -158,9 +161,7 @@ jobs:
               if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
-                if ps -p $server_pid > /dev/null; then
                 kill $server_pid
-              fi
                 exit 0
               fi
               sleep 1
