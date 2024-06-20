@@ -167,7 +167,6 @@ jobs:
                 echo "Server is healthy"
                 # Now, shutdown the server
                 docker stop "$container_name"
-                docker rm "$container_name"
                 #kill $server_pid
                 exit 0
               fi
@@ -176,8 +175,9 @@ jobs:
 
             echo "Server health check failed"
             #kill $server_pid
+            sleep 5m
             docker stop "$container_name"
-            docker rm "$container_name"
+            
             exit 1
         env:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
