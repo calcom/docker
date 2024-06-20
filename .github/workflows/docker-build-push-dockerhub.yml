@@ -134,16 +134,24 @@ jobs:
           tags="${{ steps.meta.outputs.tags }}"
           IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
           tag=${ADDR[0]}  # Get the first tag
+          container_name="calendso_container"
+          
+          docker run --rm --network stack --name "$container_name" \
+              -p 3000:3000 \
+              -e DATABASE_URL=***database/calendso \
+              -e DATABASE_DIRECT_URL=***database/calendso \
+              -e NEXTAUTH_SECRET=EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA= \
+              -e CALENDSO_ENCRYPTION_KEY=0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL \
+              -d $tag
+          # docker run --rm --network stack \
+          #   -p 3000:3000 \
+          #   -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
+          #   -e DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
+          #   -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
+          #   -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
+          #   $tag &
 
-          docker run --rm --network stack \
-            -p 3000:3000 \
-            -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-            -e DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
-            -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
-            -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
-            $tag &
-
-            server_pid=$!
+            #server_pid=$!
 
 
             echo "Waiting for the server to start..."
@@ -158,14 +166,18 @@ jobs:
               if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
-                kill $server_pid
+                docker stop "$container_name"
+                docker rm "$container_name"
+                #kill $server_pid
                 exit 0
               fi
               sleep 1
             done
 
             echo "Server health check failed"
-            kill $server_pid
+            #kill $server_pid
+            docker stop "$container_name"
+            docker rm "$container_name"
             exit 1
         env:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
