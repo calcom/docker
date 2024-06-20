@@ -158,7 +158,9 @@ jobs:
               if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
+                if ps -p $server_pid > /dev/null; then
                 kill $server_pid
+              fi
                 exit 0
               fi
               sleep 1
