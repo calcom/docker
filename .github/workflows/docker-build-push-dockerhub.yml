@@ -116,8 +116,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=registry,ref=${{ steps.meta.outputs.tags }}
-          cache-to: type=registry,ref=${{ steps.meta.outputs.tags }},mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           context: ./
           file: ./Dockerfile
           load: true  # Load the image into the Docker daemon
