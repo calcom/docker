@@ -130,13 +130,13 @@ jobs:
           tags="${{ steps.meta.outputs.tags }}"
           IFS=',' read -ra ADDR <<< "$tags"  # Convert string to array using ',' as delimiter
           tag=${ADDR[0]}  # Get the first tag
-          docker run --rm --network stack \
+          docker run --rm --network stack --name calcom \
             -p 3000:3000 \
             -e DATABASE_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
             -e DATABASE_DIRECT_URL=postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@database/${{ env.POSTGRES_DB }} \
             -e NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} \
             -e CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }} \
-            $tag &
+            -d $tag 
             server_pid=$!
             echo "Waiting for the server to start..."
             sleep 120
@@ -148,13 +148,13 @@ jobs:
               if [[ "$response" == "200" ]] || [[ "$response" == "307" ]]; then
                 echo "Server is healthy"
                 # Now, shutdown the server
-                kill $server_pid
+                docker stop calcom
                 exit 0
               fi
               sleep 1
             done
             echo "Server health check failed"
-            kill $server_pid
+            docker stop calcom
             exit 1
         env:
           NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
