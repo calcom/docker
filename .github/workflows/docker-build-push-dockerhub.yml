@@ -176,18 +176,12 @@ jobs:
             tags="${{ steps.meta.outputs.tags }}"
             IFS=',' read -ra ADDR <<< "$tags"
             tag=${ADDR[0]}
+            custom_repository="zaheerahmadopp"   
+            docker tag $tag $custom_repository/calcom:$tag
             
-            custom_tag="custom-tag"
             
-            custom_repository="zaheerahmadopp"  
-            docker tag $tag docker.io/$custom_repository/calendso:$tag
-            docker tag $tag docker.io/$custom_repository/calcom:$tag
-            docker tag $tag ghcr.io/$custom_repository/calcom:$tag
+            docker push $custom_repository/calcom:$tag
             
-            docker push docker.io/$custom_repository/calendso:$tag
-            docker push docker.io/$custom_repository/calcom:$tag
-            docker push ghcr.io/$custom_repository/calcom:$tag
-
       # - name: Push image
       #   id: docker_push
       #   uses: docker/build-push-action@v5
