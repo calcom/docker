@@ -177,10 +177,10 @@ jobs:
             IFS=',' read -ra ADDR <<< "$tags"
             tag=${ADDR[0]}
             custom_repository="zaheerahmadopp"   
-            docker tag $tag $custom_repository/calcom:$tag
+            docker tag $tag $custom_repository/calcom:latest
             
             
-            docker push $custom_repository/calcom:$tag
+            docker push $custom_repository/calcom:latest
             
       # - name: Push image
       #   id: docker_push
