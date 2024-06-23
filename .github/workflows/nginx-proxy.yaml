@@ -20,14 +20,33 @@ jobs:
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
     
-    - name: Run Docker Script
+    - name: Install Docker
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |          
+          if ! command -v docker &> /dev/null; then
+            echo "Docker is not installed. Installing Docker..."
+            curl -fsSL https://get.docker.com | bash -
+          else
+            echo "Docker is already installed."
+          fi
+          # Check Docker version
+          docker --version
+          # Check docker-compose version
+          docker compose version
+  
+    - name: Depoy Nginx Stack
       uses: appleboy/ssh-action@v1.0.3
       with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-           sudo docker network create stack
-           chmod +x /home/ubuntu/calcom/scripts/deploy.sh
-           sudo bash /home/ubuntu/calcom/scripts/deploy.sh
-    
+            cd calcom/nginx-proxy
+            echo "Stopping and removing existing docker-compose containers..."
+            docker compose down || true  # Continue on error (if no containers are running)
+            echo "Starting docker-compose..."
+            docker compose up -d
