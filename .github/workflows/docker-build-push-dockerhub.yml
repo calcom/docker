@@ -35,7 +35,6 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    environment: Dev
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -157,8 +156,8 @@ jobs:
             docker stop calcom
             exit 1
         env:
-          NEXTAUTH_SECRET: 'EI4qqDpcfdvf4A+0aQEEx8JjHxHSy4uWiZw/F32K+pA='
-          CALENDSO_ENCRYPTION_KEY: '0zfLtY99wjeLnsM7qsa8xsT+Q0oSgnOL'
+          NEXTAUTH_SECRET: ${{ env.NEXTAUTH_SECRET }}
+          CALENDSO_ENCRYPTION_KEY: ${{ env.CALENDSO_ENCRYPTION_KEY }}
 
       - name: Push image
         id: docker_push
