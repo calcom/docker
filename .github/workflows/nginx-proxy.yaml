@@ -30,6 +30,8 @@ jobs:
           if ! command -v docker &> /dev/null; then
             echo "Docker is not installed. Installing Docker..."
             curl -fsSL https://get.docker.com | bash -
+            apt-get install -y uidmap
+            dockerd-rootless-setuptool.sh install
           else
             echo "Docker is already installed."
           fi
