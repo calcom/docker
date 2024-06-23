@@ -38,11 +38,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          # Free about 4.5 GB, elminating our disk space issues
-          tool-cache: true
+      # - name: Free Disk Space (Ubuntu)
+      #   uses: jlumbroso/free-disk-space@main
+      #   with:
+      #     # Free about 4.5 GB, elminating our disk space issues
+      #     tool-cache: true
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it, uncomment below
       # - name: Checkout code at specified version
