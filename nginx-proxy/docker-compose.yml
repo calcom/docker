@@ -21,6 +21,8 @@ services:
 
     networks:
       - stack
+    restart: always
+
   docker-gen:
     image: nginxproxy/docker-gen
     container_name: nginx-proxy-gen
@@ -36,6 +38,7 @@ services:
       - stack
     depends_on:
       - nginx-proxy
+    restart: always
 
   acme-companion:
     image: nginxproxy/acme-companion
@@ -52,6 +55,7 @@ services:
       - stack
     depends_on:
       - nginx-proxy
+    restart: always
 
 volumes:
   vhost:
