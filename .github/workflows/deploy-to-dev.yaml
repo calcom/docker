@@ -13,6 +13,13 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4
+  
+    - name: Copy env
+      run: |
+          grep -o '^[^#]*' .env.example > .env
+          cat .env >> $GITHUB_ENV
+          echo "DATABASE_HOST=${{ env.DATABASE_HOST }}" >> $GITHUB_ENV
+          eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
 
     - name: Rsync Deployments
       uses: burnett01/rsync-deployments@7.0.1
@@ -22,13 +29,6 @@ jobs:
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Copy env
-      run: |
-          grep -o '^[^#]*' .env.example > .env
-          cat .env >> $GITHUB_ENV
-          echo "DATABASE_HOST=${{ env.DATABASE_HOST }}" >> $GITHUB_ENV
-          eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
 
     - name: Install Docker
       uses: appleboy/ssh-action@v1.0.3
