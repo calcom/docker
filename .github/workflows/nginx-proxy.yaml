@@ -34,7 +34,7 @@ jobs:
             echo "Docker is already installed."
           fi
           # Check Docker version
-          apt-get install -y uidmap
+          sudo apt-get install -y uidmap
           dockerd-rootless-setuptool.sh install
           docker --version
           # Check docker-compose version
