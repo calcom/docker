@@ -49,6 +49,7 @@ jobs:
           script: |
             cd calcom/nginx-proxy
             echo "Stopping and removing existing docker-compose containers..."
-            docker compose down || true  # Continue on error (if no containers are running)
+            docker compose down 
+            sleep 5s
             echo "Starting docker-compose..."
             docker compose up -d
