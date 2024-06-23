@@ -16,7 +16,7 @@ jobs:
   
     - name: Copy env
       run: |
-          echo ${{ env.NEXT_PUBLIC_WEBAPP_URL }}
+          echo ${{ secrets.NEXT_PUBLIC_WEBAPP_URL }}
           grep -o '^[^#]*' .env.example > .env
           sed -i \
           -e 's|NEXT_PUBLIC_WEBAPP_URL=.*|NEXT_PUBLIC_WEBAPP_URL=${{env.NEXT_PUBLIC_WEBAPP_URL }}|' \
