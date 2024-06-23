@@ -22,7 +22,13 @@ jobs:
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-    
+    - name: Copy env
+      run: |
+          grep -o '^[^#]*' .env.example > .env
+          cat .env >> $GITHUB_ENV
+          echo "DATABASE_HOST=localhost:5432" >> $GITHUB_ENV
+          eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;
+
     - name: Install Docker
       uses: appleboy/ssh-action@v1.0.3
       with:
