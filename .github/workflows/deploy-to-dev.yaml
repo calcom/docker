@@ -66,9 +66,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd calcom
+            sudo docker compose -f docker-compose-prod.yaml pull
             echo "Stopping and removing existing docker-compose containers..."
-            sudo docker compose down 
+            sudo docker compose down
             echo "Starting docker-compose..."
-            sudo docker compose -f docker-compose-prod.yaml up -d
+            sudo docker compose -f docker-compose-prod.yaml up -d 
     
     
