@@ -41,17 +41,17 @@ jobs:
           # Check docker-compose version
           docker compose version
     
-    # - name: Depoy Calcom Stack
-    #   uses: appleboy/ssh-action@v1.0.3
-    #   with:
-    #       host: ${{ secrets.REMOTE_HOST }}
-    #       username: ${{ secrets.REMOTE_USER }}
-    #       key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #       script: |
-    #         cd calcom
-    #         echo "Stopping and removing existing docker-compose containers..."
-    #         docker compose down || true  # Continue on error (if no containers are running)
-    #         echo "Starting docker-compose..."
-    #         docker compose -f docker-compose-prod.yaml up -d
+    - name: Depoy Calcom Stack
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd calcom
+            echo "Stopping and removing existing docker-compose containers..."
+            docker compose down || true  # Continue on error (if no containers are running)
+            echo "Starting docker-compose..."
+            docker compose -f docker-compose-prod.yaml up -d
     
     
