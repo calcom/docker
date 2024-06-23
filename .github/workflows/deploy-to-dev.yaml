@@ -27,6 +27,7 @@ jobs:
           -e 's|POSTGRES_DB=.*|POSTGRES_DB=${{ secrets.POSTGRES_DB }}|' \
           -e 's|DATABASE_HOST=.*|DATABASE_HOST=${{ secrets.DATABASE_HOST }}|' \
           .env
+          echo ALLOWED_HOSTNAMES='"api.linuxhunter.com","linuxhunter.com"' >> .env
           cat .env >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
 
