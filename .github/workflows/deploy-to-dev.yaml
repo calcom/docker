@@ -17,6 +17,16 @@ jobs:
     - name: Copy env
       run: |
           grep -o '^[^#]*' .env.example > .env
+          sed -i \
+          -e 's|NEXT_PUBLIC_WEBAPP_URL=.*|NEXT_PUBLIC_WEBAPP_URL=${{ env.NEXT_PUBLIC_WEBAPP_URL }}|' \
+          -e 's|NEXT_PUBLIC_API_V2_URL=.*|NEXT_PUBLIC_API_V2_URL=${{ env.NEXT_PUBLIC_API_V2_URL }}|' \
+          -e 's|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}|' \
+          -e 's|CALENDSO_ENCRYPTION_KEY=.*|CALENDSO_ENCRYPTION_KEY=${{ env.CALENDSO_ENCRYPTION_KEY }}|' \
+          -e 's|POSTGRES_USER=.*|POSTGRES_USER=${{ env.POSTGRES_USER }}|' \
+          -e 's|POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}|' \
+          -e 's|POSTGRES_DB=.*|POSTGRES_DB=${{ env.POSTGRES_DB }}|' \
+          -e 's|DATABASE_HOST=.*|DATABASE_HOST=${{ env.DATABASE_HOST }}|' \
+          .env
           cat .env >> $GITHUB_ENV
           echo "DATABASE_HOST=${{ env.DATABASE_HOST }}" >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
