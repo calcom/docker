@@ -3,7 +3,7 @@ version: '3.8'
 
 networks:
   stack:
-    external: false
+    external: true
 
 services:
 
