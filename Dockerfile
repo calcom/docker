@@ -1,5 +1,7 @@
 FROM node:18 as builder
 
+RUN git init && git submodule update --remote --init
+
 WORKDIR /calcom
 
 ARG NEXT_PUBLIC_LICENSE_CONSENT
