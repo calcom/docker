@@ -1,4 +1,4 @@
 [submodule "calcom"]
 	path = calcom
-	url = https://github.com/calcom/cal.com.git
+	url = https://github.com/YouthCatalyst/calendar.git
 	branch = main
