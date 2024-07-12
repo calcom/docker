@@ -72,5 +72,3 @@ jobs:
             sudo docker compose down
             echo "Starting docker-compose..."
             sudo docker compose -f docker-compose-prod.yaml up -d 
-    
-    
