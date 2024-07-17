@@ -15,6 +15,9 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Copy env
       run: |
@@ -38,7 +41,7 @@ jobs:
       with:
         switches: -avzr --delete
         legacy_allow_rsa_hostkeys: "true"
-        remote_path: ~/
+        remote_path: ~/calcom
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
