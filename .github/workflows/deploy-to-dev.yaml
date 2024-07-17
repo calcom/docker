@@ -38,7 +38,7 @@ jobs:
       with:
         switches: -avzr --delete
         legacy_allow_rsa_hostkeys: "true"
-        remote_path: /home/ubuntu/calcom
+        remote_path: ~/
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
