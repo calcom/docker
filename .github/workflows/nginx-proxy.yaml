@@ -11,6 +11,14 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+       host: ${{ secrets.REMOTE_HOST }}
+       username: ${{ secrets.REMOTE_USER }}
+       key: ${{ secrets.SSH_PRIVATE_KEY }}
+       script: whoami
+
     - name: Rsync Deployments
       uses: burnett01/rsync-deployments@7.0.1
       with:
