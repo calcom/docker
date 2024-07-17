@@ -5,7 +5,6 @@ networks:
     name: stack
     external: false
 
-
 services:
   nginx-proxy:
     image: nginx
