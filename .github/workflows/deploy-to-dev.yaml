@@ -7,14 +7,14 @@ on:
       - completed
 jobs:
   Deploy-Calcom-Stack:
-  
+
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment: Dev
     steps:
     - name: checkout
       uses: actions/checkout@v4
-  
+
     - name: Copy env
       run: |
           grep -o '^[^#]*' .env.example > .env
@@ -28,7 +28,7 @@ jobs:
           -e 's|POSTGRES_DB=.*|POSTGRES_DB=${{ secrets.POSTGRES_DB }}|' \
           -e 's|DATABASE_HOST=.*|DATABASE_HOST=${{ secrets.DATABASE_HOST }}|' \
           .env
-          echo 'ALLOWED_HOSTNAMES="\"api.linuxhunter.com\",\"linuxhunter.com\""' >> .env
+          echo 'ALLOWED_HOSTNAMES="\"api.flercal.com\",\"flercal.com\""' >> .env
           cat .env >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
 
@@ -47,7 +47,7 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |          
+        script: |
           if ! command -v docker &> /dev/null; then
             echo "Docker is not installed. Installing Docker..."
             curl -fsSL https://get.docker.com | bash -
@@ -58,8 +58,8 @@ jobs:
           sudo docker --version
           # Check docker-compose version
           sudo docker compose version
-    
-    - name: Depoy Calcom Stack
+
+    - name: Deploy Calcom Stack
       uses: appleboy/ssh-action@v1.0.3
       with:
           host: ${{ secrets.REMOTE_HOST }}

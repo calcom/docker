@@ -44,7 +44,7 @@ services:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
     environment:
-      - DEFAULT_EMAIL=zaheerahmadopp@gmail.com
+      - DEFAULT_EMAIL=info@getfler.com
     volumes_from:
       - nginx-proxy
     volumes:
