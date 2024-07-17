@@ -28,21 +28,21 @@ services:
       - stack
 
   # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
-  studio:
-    image: calcom.docker.scarf.sh/calcom/cal.com
-    restart: always
-    networks:
-      - stack
-    ports:
-      - 5555:5555
-    env_file: .env
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - VIRTUAL_HOST=api.flercal.com
-      - LETSENCRYPT_HOST=api.flercal.com
-      - VIRTUAL_PORT=5555
-    command:
-      - npx
-      - prisma
-      - studio
+  # studio:
+  #   image: calcom.docker.scarf.sh/calcom/cal.com
+  #   restart: always
+  #   networks:
+  #     - stack
+  #   ports:
+  #     - 5555:5555
+  #   env_file: .env
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - VIRTUAL_HOST=api.flercal.com
+  #     - LETSENCRYPT_HOST=api.flercal.com
+  #     - VIRTUAL_PORT=5555
+  #   command:
+  #     - npx
+  #     - prisma
+  #     - studio
 # END SECTION: Optional use of Prisma Studio.

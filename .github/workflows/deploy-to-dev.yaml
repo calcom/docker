@@ -32,7 +32,7 @@ jobs:
           -e 's|POSTGRES_DB=.*|POSTGRES_DB=${{ secrets.POSTGRES_DB }}|' \
           -e 's|DATABASE_HOST=.*|DATABASE_HOST=${{ secrets.DATABASE_HOST }}|' \
           .env
-          echo 'ALLOWED_HOSTNAMES="\"api.flercal.com\",\"flercal.com\""' >> .env
+          echo 'ALLOWED_HOSTNAMES="\"api.flercal.com\",\"flercal.com\"\"www.flercal.com\",\"cal.getfler.com\""' >> .env
           cat .env >> $GITHUB_ENV
           eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
 
@@ -40,8 +40,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
-        legacy_allow_rsa_hostkeys: "true"
-        remote_path: ~/calcom
+        remote_path: /home/calcom/calcom
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}
         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
