@@ -6,7 +6,7 @@ on:
     types:
       - completed
 jobs:
-  Deploy-Calcom-Stack:
+  Deploy-Calcom-Stack-Dev:
 
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -36,6 +36,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
+        legacy_allow_rsa_hostkeys: "true"
         remote_path: /home/ubuntu/calcom
         remote_host: ${{ secrets.REMOTE_HOST }}
         remote_user: ${{ secrets.REMOTE_USER }}

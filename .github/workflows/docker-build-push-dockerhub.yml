@@ -1,5 +1,8 @@
 name: Build and push image to DockerHub
 
+env:
+  IMAGE_NAME: palbrattberg/cal.com
+
 # Controls when the workflow will run
 on:
   push:
@@ -75,7 +78,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            palbrattberg/cal.com
+            ${{ env.IMAGE_NAME }}
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
             latest=${{ !github.event.release.prerelease }}
