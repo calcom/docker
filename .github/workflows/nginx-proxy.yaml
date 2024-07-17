@@ -11,15 +11,15 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
-    # - name: Rsync Deployments
-    #   uses: burnett01/rsync-deployments@7.0.1
-    #   with:
-    #     switches: -avzr --delete
-    #     legacy_allow_rsa_hostkeys: "true"
-    #     remote_path: ~/
-    #     remote_host: ${{ secrets.REMOTE_HOST }}
-    #     remote_user: ${{ secrets.REMOTE_USER }}
-    #     remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Rsync Deployments
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        legacy_allow_rsa_hostkeys: "true"
+        remote_path: ~/
+        remote_host: ${{ secrets.REMOTE_HOST }}
+        remote_user: ${{ secrets.REMOTE_USER }}
+        remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Install Docker
       uses: appleboy/ssh-action@v1.0.3
