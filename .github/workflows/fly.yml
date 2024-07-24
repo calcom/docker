@@ -8,6 +8,8 @@ env:
 
 # Controls when the workflow will run
 on:
+  pull_request:
+    types: [opened, synchronize]
   push:
     branches:
       - "release"
@@ -64,10 +66,12 @@ jobs:
           DATABASE_URL=$(echo "$secrets" | grep "DATABASE_URL=" | cut -d= -f2-)
           NEXTAUTH_SECRET=$(echo "$secrets" | grep "NEXTAUTH_SECRET=" | cut -d= -f2-)
           CALENDSO_ENCRYPTION_KEY=$(echo "$secrets" | grep "CALENDSO_ENCRYPTION_KEY=" | cut -d= -f2-)
+          NEXT_PUBLIC_WEBAPP_URL=$(echo "$secrets" | grep "NEXT_PUBLIC_WEBAPP_URL=" | cut -d= -f2-)
 
           echo "DATABASE_URL=$DATABASE_URL" >> "$GITHUB_OUTPUT"
           echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> "$GITHUB_OUTPUT"
           echo "CALENDSO_ENCRYPTION_KEY=$CALENDSO_ENCRYPTION_KEY" >> "$GITHUB_OUTPUT"
+          echo "NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL" >> "$GITHUB_OUTPUT"
 
       - name: flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
@@ -77,3 +81,4 @@ jobs:
           flyctl deploy --build-arg DATABASE_URL=${{ steps.secret-fetcher.outputs.DATABASE_URL }} \
                         --build-arg NEXTAUTH_SECRET=${{ steps.secret-fetcher.outputs.NEXTAUTH_SECRET }} \
                         --build-arg CALENDSO_ENCRYPTION_KEY=${{ steps.secret-fetcher.outputs.CALENDSO_ENCRYPTION_KEY }}
+                        --build-arg NEXT_PUBLIC_WEBAPP_URL=${{ steps.secret-fetcher.outputs.NEXT_PUBLIC_WEBAPP_URL }}
