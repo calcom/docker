@@ -1,0 +1,65 @@
+version: '3.8'
+
+networks:
+  stack:
+    name: stack
+    external: false
+
+
+services:
+  nginx-proxy:
+    image: nginx
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - vhost:/etc/nginx/vhost.d
+      - conf:/etc/nginx/conf.d
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs
+
+    networks:
+      - stack
+    restart: always
+
+  docker-gen:
+    image: nginxproxy/docker-gen
+    container_name: nginx-proxy-gen
+    command: -notify-sighup nginx-proxy -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl
+      - /var/run/docker.sock:/tmp/docker.sock
+    labels:
+      - "com.github.nginx-proxy.docker-gen"
+    networks:
+      - stack
+    depends_on:
+      - nginx-proxy
+    restart: always
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    environment:
+      - DEFAULT_EMAIL=zaheerahmadopp@gmail.com
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - stack
+    depends_on:
+      - nginx-proxy
+    restart: always
+
+volumes:
+  vhost:
+  conf:
+  html:
+  certs:
+  acme:

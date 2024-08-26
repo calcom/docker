@@ -1,0 +1,75 @@
+name: Deploy Calcom Stack To Dev
+on:
+  workflow_run:
+    workflows: ["Build and push image to DockerHub"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+jobs:
+  Deploy-Calcom-Stack:
+  
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    environment: Dev
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+  
+    - name: Copy env
+      run: |
+          grep -o '^[^#]*' .env.example > .env
+          sed -i \
+          -e 's|NEXT_PUBLIC_WEBAPP_URL=.*|NEXT_PUBLIC_WEBAPP_URL=${{secrets.NEXT_PUBLIC_WEBAPP_URL }}|' \
+          -e 's|NEXT_PUBLIC_API_V2_URL=.*|NEXT_PUBLIC_API_V2_URL=${{ secrets.NEXT_PUBLIC_API_V2_URL }}|' \
+          -e 's|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}|' \
+          -e 's|CALENDSO_ENCRYPTION_KEY=.*|CALENDSO_ENCRYPTION_KEY=${{ secrets.CALENDSO_ENCRYPTION_KEY }}|' \
+          -e 's|POSTGRES_USER=.*|POSTGRES_USER=${{ secrets.POSTGRES_USER }}|' \
+          -e 's|POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}|' \
+          -e 's|POSTGRES_DB=.*|POSTGRES_DB=${{ secrets.POSTGRES_DB }}|' \
+          -e 's|DATABASE_HOST=.*|DATABASE_HOST=${{ secrets.DATABASE_HOST }}|' \
+          .env
+          echo 'ALLOWED_HOSTNAMES="\"api.flercal.com\",\"flercal.com\",\"www.flercal.com\",\"cal.getfler.com\""' >> .env
+          cat .env >> $GITHUB_ENV
+          eval $(sed -e '/^#/d' -e 's/^/export /' -e 's/$/;/' .env) ;    
+
+    - name: Rsync Deployments
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        remote_path: ~/calcom
+        remote_host: ${{ secrets.REMOTE_HOST }}
+        remote_user: ${{ secrets.REMOTE_USER }}
+        remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Install Docker
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |          
+          if ! command -v docker &> /dev/null; then
+            echo "Docker is not installed. Installing Docker..."
+            curl -fsSL https://get.docker.com | bash -
+          else
+            echo "Docker is already installed."
+          fi
+          # Check Docker version
+          sudo docker --version
+          # Check docker-compose version
+          sudo docker compose version
+    
+    - name: Deploy Calcom Stack
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd calcom
+            sudo docker compose -f docker-compose-prod.yaml pull
+            echo "Stopping and removing existing docker-compose containers..."
+            sudo docker compose down
+            echo "Starting docker-compose..."
+            sudo docker compose -f docker-compose-prod.yaml up -d 

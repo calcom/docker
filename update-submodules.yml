@@ -1,0 +1,26 @@
+name: Update Calendso
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch: ~
+
+jobs:
+  sync:
+    name: 'Submodules Sync'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Git submodule update
+        run: |
+          git submodule update --remote --init
+
+      - name: Commit
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "actions-user"
+          git commit -am "Auto updated submodule references" && git push || echo "No changes to commit"

@@ -1,0 +1,48 @@
+version: '3.8'
+
+networks:
+  stack:
+    external: true
+
+services:
+
+  calcom:
+    image: palbrattberg/cal.com
+    container_name: calcom
+    restart: always
+    ports:
+      - 3000:3000
+    env_file: .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - VIRTUAL_HOST=flercal.com
+      - LETSENCRYPT_HOST=flercal.com
+      - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
+      - NEXT_PUBLIC_API_V2_URL=${NEXT_PUBLIC_API_V2_URL}
+      - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
+      - CALCOM_TELEMETRY_DISABLED=${CALCOM_TELEMETRY_DISABLED}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY}
+      - VIRTUAL_PORT=3000
+    networks:
+      - stack
+
+  # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
+  # studio:
+  #   image: calcom.docker.scarf.sh/calcom/cal.com
+  #   restart: always
+  #   networks:
+  #     - stack
+  #   ports:
+  #     - 5555:5555
+  #   env_file: .env
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - VIRTUAL_HOST=api.linuxhunter.com
+  #     - LETSENCRYPT_HOST=api.linuxhunter.com
+  #     - VIRTUAL_PORT=5555
+  #   command:
+  #     - npx
+  #     - prisma
+  #     - studio
+# END SECTION: Optional use of Prisma Studio.

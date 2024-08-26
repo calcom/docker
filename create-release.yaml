@@ -1,0 +1,60 @@
+name: "Create Release"
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+    inputs:
+      RELEASE_TAG:
+        description: 'v{Major}.{Minor}.{Patch}'  
+
+jobs:
+  release:
+    name: "Release"
+    permissions:
+      contents: write
+    runs-on: "ubuntu-latest"
+
+    steps:
+      
+      - name: Checkout source
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACTIONS_ACCESS_TOKEN }}
+          submodules: true
+
+      - name: Create branch and tag submodule
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "actions-user"
+          git submodule update --init --remote
+          git checkout -b 'release-${{ inputs.RELEASE_TAG }}'
+          (cd calcom && git fetch --tags origin && git checkout 'refs/tags/${{ inputs.RELEASE_TAG }}')
+          git add calcom
+          git commit -m "tag version Cal.com version ${{ inputs.RELEASE_TAG }}"
+          git push origin 'release-${{ inputs.RELEASE_TAG }}'
+
+      # note: instead of secrets.GITHUB_TOKEN here, we need to use a PAT 
+      #       so that the release creation triggers the image build workflow
+      - name: "Create release"
+        uses: "actions/github-script@v6"
+        with:
+          github-token: "${{ secrets.ACTIONS_ACCESS_TOKEN }}"
+          script: |
+            const isPreRelease = '${{ inputs.RELEASE_TAG }}'.includes('-rc'); 
+            try {
+              const response = await github.rest.repos.createRelease({
+                draft: false,
+                generate_release_notes: true,
+                body: 'For Cal.com release details, see: https://github.com/calcom/cal.com/releases/tag/${{ inputs.RELEASE_TAG }}',
+                name: '${{ inputs.RELEASE_TAG }}',
+                target_commitish: 'release-${{ inputs.RELEASE_TAG }}',
+                owner: context.repo.owner,
+                prerelease: isPreRelease,
+                repo: context.repo.repo,
+                tag_name: '${{ inputs.RELEASE_TAG }}',
+              });
+
+              core.exportVariable('RELEASE_ID', response.data.id);
+              core.exportVariable('RELEASE_UPLOAD_URL', response.data.upload_url);
+            } catch (error) {
+              core.setFailed(error.message);
+            }

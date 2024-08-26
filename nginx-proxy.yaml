@@ -1,0 +1,54 @@
+name: Deploy Nginx Proxy Stack
+
+on:
+  workflow_dispatch:
+jobs:
+  nginx-proxy-stack:
+  
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: Rsync Deployments
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        remote_path: ~/calcom
+        remote_host: ${{ secrets.REMOTE_HOST }}
+        remote_user: ${{ secrets.REMOTE_USER }}
+        remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+    
+    - name: Install Docker
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |          
+          if ! command -v docker &> /dev/null; then
+            echo "Docker is not installed. Installing Docker..."
+            curl -fsSL https://get.docker.com | bash -
+          else
+            echo "Docker is already installed."
+          fi
+          # Check Docker version
+          
+          sudo docker --version
+          # Check docker-compose version
+          sudo docker compose version
+  
+    - name: Depoy Nginx Stack
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd calcom/nginx-proxy
+            echo "Stopping and removing existing docker-compose containers..."
+            sudo docker compose down 
+            sleep 3s
+            echo "Starting docker-compose..."
+            sudo docker compose up -d
