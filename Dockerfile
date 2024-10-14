@@ -1,6 +1,6 @@
 FROM node:18 as builder
 
-WORKDIR /calcom
+WORKDIR /cal.com
 
 ARG NEXT_PUBLIC_LICENSE_CONSENT
 ARG CALCOM_TELEMETRY_DISABLED
@@ -21,21 +21,21 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE} \
     BUILD_STANDALONE=true
 
-COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh ./
-COPY calcom/.yarn ./.yarn
-COPY calcom/apps/web ./apps/web
-COPY calcom/apps/api/v2 ./apps/api/v2
-COPY calcom/packages ./packages
-COPY calcom/tests ./tests
+COPY cal.com/package.json cal.com/yarn.lock cal.com/.yarnrc.yml cal.com/playwright.config.ts cal.com/turbo.json cal.com/git-init.sh cal.com/git-setup.sh ./
+COPY cal.com/.yarn ./.yarn
+COPY cal.com/apps/web ./apps/web
+COPY cal.com/apps/api/v2 ./apps/api/v2
+COPY cal.com/packages ./packages
+COPY cal.com/tests ./tests
 
 RUN yarn config set httpTimeout 1200000
-RUN npx turbo prune --scope=@calcom/web --docker
+RUN npx turbo prune --scope=@cal.com/web --docker
 RUN yarn install
 RUN yarn db-deploy
 RUN yarn --cwd packages/prisma seed-app-store
 # Build and make embed servable from web/public/embed folder
-RUN yarn --cwd packages/embeds/embed-core workspace @calcom/embed-core run build
-RUN yarn --cwd apps/web workspace @calcom/web run build
+RUN yarn --cwd packages/embeds/embed-core workspace @cal.com/embed-core run build
+RUN yarn --cwd apps/web workspace @cal.com/web run build
 
 # RUN yarn plugin import workspace-tools && \
 #     yarn workspaces focus --all --production
@@ -43,18 +43,18 @@ RUN rm -rf node_modules/.cache .yarn/cache apps/web/.next/cache
 
 FROM node:18 as builder-two
 
-WORKDIR /calcom
+WORKDIR /cal.com
 ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
 
 ENV NODE_ENV production
 
-COPY calcom/package.json calcom/.yarnrc.yml calcom/turbo.json ./
-COPY calcom/.yarn ./.yarn
-COPY --from=builder /calcom/yarn.lock ./yarn.lock
-COPY --from=builder /calcom/node_modules ./node_modules
-COPY --from=builder /calcom/packages ./packages
-COPY --from=builder /calcom/apps/web ./apps/web
-COPY --from=builder /calcom/packages/prisma/schema.prisma ./prisma/schema.prisma
+COPY cal.com/package.json cal.com/.yarnrc.yml cal.com/turbo.json ./
+COPY cal.com/.yarn ./.yarn
+COPY --from=builder /cal.com/yarn.lock ./yarn.lock
+COPY --from=builder /cal.com/node_modules ./node_modules
+COPY --from=builder /cal.com/packages ./packages
+COPY --from=builder /cal.com/apps/web ./apps/web
+COPY --from=builder /cal.com/packages/prisma/schema.prisma ./prisma/schema.prisma
 COPY scripts scripts
 
 # Save value used during this build stage. If NEXT_PUBLIC_WEBAPP_URL and BUILT_NEXT_PUBLIC_WEBAPP_URL differ at
@@ -67,8 +67,8 @@ RUN scripts/replace-placeholder.sh http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER ${N
 FROM node:18 as runner
 
 
-WORKDIR /calcom
-COPY --from=builder-two /calcom ./
+WORKDIR /cal.com
+COPY --from=builder-two /cal.com ./
 ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
 ENV NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
     BUILT_NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL
@@ -79,4 +79,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
     CMD wget --spider http://localhost:3000 || exit 1
 
-CMD ["/calcom/scripts/start.sh"]
+CMD ["/cal.com/scripts/start.sh"]
