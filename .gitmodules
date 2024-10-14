@@ -1,0 +1,3 @@
+[submodule "cal.com"]
+	path = cal.com
+	url = git@github.com:Aldian1/cal.com.git
