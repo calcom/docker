@@ -1,0 +1,43 @@
+name: Trigger auto deployment for calorthlane
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/calorthlane-AutoDeployTrigger-6e7b0d3d-8d28-43b4-a026-d7c63e399bf1.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CALORTHLANE_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: calcom.azurecr.io
+          registryUsername: ${{ secrets.CALORTHLANE_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CALORTHLANE_REGISTRY_PASSWORD }}
+          containerAppName: calorthlane
+          resourceGroup: cal.com
+          imageToBuild: calcom.azurecr.io/calorthlane:${{ github.sha }}
+          
+            
+
+     
+
