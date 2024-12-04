@@ -48,7 +48,7 @@ ARG NEXT_PUBLIC_WEBAPP_URL=http://localhost:3000
 
 ENV NODE_ENV production
 
-COPY calcom/package.json calcom/.yarnrc.yml calcom/turbo.json ./
+COPY calcom/package.json calcom/.yarnrc.yml calcom/turbo.json calcom/i18n.json ./
 COPY calcom/.yarn ./.yarn
 COPY --from=builder /calcom/yarn.lock ./yarn.lock
 COPY --from=builder /calcom/node_modules ./node_modules
