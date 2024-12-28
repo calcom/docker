@@ -78,12 +78,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            docker.io/calendso/calendso
-            docker.io/calcom/cal.com
-            ghcr.io/calcom/cal.com
-          # Add flavor latest only on full releases, not on pre-releases
+            moolice/calcom  # Change this to your Docker Hub repository path
           flavor: |
             latest=${{ !github.event.release.prerelease }}
+
 
       - name: Copy env
         run: |
