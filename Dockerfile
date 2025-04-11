@@ -19,7 +19,17 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
     CALENDSO_ENCRYPTION_KEY=${CALENDSO_ENCRYPTION_KEY} \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE} \
-    BUILD_STANDALONE=true
+    BUILD_STANDALONE=true \
+    EMAIL_FROM=example@example.com
+
+# Install system dependencies for canvas
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev
 
 COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/git-init.sh calcom/git-setup.sh calcom/i18n.json ./
 COPY calcom/.yarn ./.yarn
@@ -28,17 +38,26 @@ COPY calcom/apps/api/v2 ./apps/api/v2
 COPY calcom/packages ./packages
 COPY calcom/tests ./tests
 
-RUN yarn config set httpTimeout 1200000
+RUN yarn config set httpTimeout 120000
 RUN npx turbo prune --scope=@calcom/web --docker
+
+# Clean yarn cache and install dependencies
+RUN yarn cache clean
+RUN rm -rf node_modules
 RUN yarn install
+
+# Install optional dependencies
+RUN yarn add bufferutil utf-8-validate canvas
+
+# Update browserslist database
+RUN npx update-browserslist-db@latest
+
 RUN yarn db-deploy
 RUN yarn --cwd packages/prisma seed-app-store
 # Build and make embed servable from web/public/embed folder
 RUN yarn --cwd packages/embeds/embed-core workspace @calcom/embed-core run build
 RUN yarn --cwd apps/web workspace @calcom/web run build
 
-# RUN yarn plugin import workspace-tools && \
-#     yarn workspaces focus --all --production
 RUN rm -rf node_modules/.cache .yarn/cache apps/web/.next/cache
 
 FROM node:18 as builder-two
