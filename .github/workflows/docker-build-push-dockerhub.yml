@@ -106,7 +106,7 @@ jobs:
             network=container:database
           buildkitd-flags: |
             --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
-          platforms: linux/arm64
+          platforms: linux/arm64,linux/amd64
 #           config-inline: |
 #             [worker.oci]
 #               max-parallelism = 1
@@ -179,7 +179,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64
+          platforms: linux/arm64,linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
