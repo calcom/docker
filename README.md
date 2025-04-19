@@ -52,7 +52,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 1. Clone calcom/docker
 
     ```bash
-    git clone https://github.com/calcom/docker.git
+    git clone --recursive https://github.com/calcom/docker.git
     ```
 
 2. Change into the directory
