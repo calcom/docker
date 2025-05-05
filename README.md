@@ -219,6 +219,8 @@ Updating these variables is not required for evaluation, but is required for run
 | --- | --- | --- | --- |
 | NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
 | NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
+| NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
+| NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
 | CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 | DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
