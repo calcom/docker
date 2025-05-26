@@ -31,7 +31,7 @@ services:
       network: dockploy-network
     restart: always
     networks:
-      - stack
+      - dockploy-network
     ports:
       - 3000:3000
     env_file: .env
