@@ -3,6 +3,10 @@
 volumes:
   database-data:
 
+networks:
+  dockploy-network:
+    driver: bride
+
 services:
   database:
     container_name: database
