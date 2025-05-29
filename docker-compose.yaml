@@ -43,3 +43,4 @@ services:
       - DATABASE_DIRECT_URL=${DATABASE_URL}
     depends_on:
       - database
+    command: sh -c "yarn db-deploy && yarn start"
