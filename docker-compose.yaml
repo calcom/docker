@@ -20,7 +20,7 @@ services:
       - stack
 
   calcom:
-    image: calcom.docker.scarf.sh/calcom/cal.com
+    image: calcom.docker.scarf.sh/calcom/cal.com:v5.0.19
     build:
       context: .
       dockerfile: Dockerfile
@@ -50,7 +50,7 @@ services:
 
 # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
   studio:
-    image: calcom.docker.scarf.sh/calcom/cal.com
+    image: calcom.docker.scarf.sh/calcom/cal.com:v5.0.19
     restart: always
     networks:
       - stack
