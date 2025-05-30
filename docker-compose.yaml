@@ -33,7 +33,6 @@ services:
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
-      network: stack
     restart: always
     networks:
       - stack
