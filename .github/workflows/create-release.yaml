@@ -39,6 +39,7 @@ jobs:
         with:
           github-token: "${{ secrets.ACTIONS_ACCESS_TOKEN }}"
           script: |
+            const isPreRelease = '${{ inputs.RELEASE_TAG }}'.includes('-rc'); 
             try {
               const response = await github.rest.repos.createRelease({
                 draft: false,
@@ -47,7 +48,7 @@ jobs:
                 name: '${{ inputs.RELEASE_TAG }}',
                 target_commitish: 'release-${{ inputs.RELEASE_TAG }}',
                 owner: context.repo.owner,
-                prerelease: false,
+                prerelease: isPreRelease,
                 repo: context.repo.repo,
                 tag_name: '${{ inputs.RELEASE_TAG }}',
               });
