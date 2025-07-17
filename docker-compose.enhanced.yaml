@@ -1,0 +1,103 @@
+# Enhanced Docker Compose with automatic secret generation
+# Use this instead of docker-compose.yaml for automatic setup
+
+volumes:
+  database-data:
+
+networks:
+  stack:
+    name: stack
+    external: false
+
+services:
+  # Secret generation service
+  setup:
+    image: alpine:latest
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: >
+      sh -c "
+        apk add --no-cache openssl &&
+        if [ ! -f .env ]; then
+          echo 'Creating .env from .env.example...' &&
+          cp .env.example .env
+        fi &&
+        if grep -q 'NEXTAUTH_SECRET=secret' .env; then
+          echo 'Generating NEXTAUTH_SECRET...' &&
+          NEXTAUTH_SECRET=$$(openssl rand -base64 32) &&
+          sed -i \"s/NEXTAUTH_SECRET=secret/NEXTAUTH_SECRET=$$NEXTAUTH_SECRET/\" .env
+        fi &&
+        if grep -q 'CALENDSO_ENCRYPTION_KEY=secret' .env; then
+          echo 'Generating CALENDSO_ENCRYPTION_KEY (24 chars for 2FA)...' &&
+          CALENDSO_ENCRYPTION_KEY=$$(openssl rand -base64 24) &&
+          sed -i \"s/CALENDSO_ENCRYPTION_KEY=secret/CALENDSO_ENCRYPTION_KEY=$$CALENDSO_ENCRYPTION_KEY/\" .env
+        fi &&
+        echo 'Setup complete! Secrets generated in .env file.'
+      "
+
+  database:
+    container_name: database
+    image: postgres
+    restart: always
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    env_file: .env
+    networks:
+      - stack
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  calcom:
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_WEBAPP_URL: ${NEXT_PUBLIC_WEBAPP_URL}
+        NEXT_PUBLIC_API_V2_URL: ${NEXT_PUBLIC_API_V2_URL}
+        NEXT_PUBLIC_LICENSE_CONSENT: ${NEXT_PUBLIC_LICENSE_CONSENT}
+        NEXT_PUBLIC_WEBSITE_TERMS_URL: ${NEXT_PUBLIC_WEBSITE_TERMS_URL}
+        NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL: ${NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL}
+        CALCOM_TELEMETRY_DISABLED: ${CALCOM_TELEMETRY_DISABLED}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
+        DATABASE_URL: ${DATABASE_URL}
+        DATABASE_DIRECT_URL: ${DATABASE_URL}
+    restart: always
+    networks:
+      - stack
+    ports:
+      - 3000:3000
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DATABASE_DIRECT_URL=${DATABASE_URL}
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+      database:
+        condition: service_started
+
+  # Optional Prisma Studio
+  studio:
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    restart: always
+    networks:
+      - stack
+    ports:
+      - 5555:5555
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+      - DATABASE_DIRECT_URL=${DATABASE_URL}
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+      database:
+        condition: service_started
+    command:
+      - npx
+      - prisma
+      - studio

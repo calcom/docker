@@ -61,15 +61,34 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd docker
     ```
 
-3. Prepare your configuration: Rename `.env.example` to `.env` and then update `.env`
+3. Prepare your configuration: 
 
+    **Option A: Automatic Setup (Recommended)**
+    ```bash
+    ./setup.sh
+    ```
+    This script will create your `.env` file and generate secure secrets automatically.
+
+    **Option B: Manual Setup**
     ```bash
     cp .env.example .env
     ```
+    
+    **⚠️ CRITICAL: Generate secure secrets before proceeding**
+    
+    The default `.env.example` contains placeholder values that will cause issues, particularly with 2FA functionality. You MUST generate proper secrets:
+    
+    ```bash
+    # Generate NEXTAUTH_SECRET (32 characters)
+    openssl rand -base64 32
+    
+    # Generate CALENDSO_ENCRYPTION_KEY (24 characters - required for 2FA)
+    openssl rand -base64 24
+    ```
+    
+    Update these values in your `.env` file, replacing the default `secret` values.
 
-    Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below.
-
-    Update the appropriate values in your .env file, then proceed.
+    Most other configurations can be left as-is, but for additional configuration options see [Important Run-time variables](#important-run-time-variables) below.
 
 4. (optional) Pre-Pull the images by running the following command:
 
