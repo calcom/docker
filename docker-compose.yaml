@@ -2,6 +2,7 @@
 
 volumes:
   database-data:
+  redis-data:
 
 networks:
   stack:
@@ -18,6 +19,17 @@ services:
     env_file: .env
     networks:
       - stack
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    volumes:
+      - redis-data:/data
+    networks:
+      - stack
+    ports:
+      - 6379:6379
 
   calcom:
     image: calcom.docker.scarf.sh/calcom/cal.com
