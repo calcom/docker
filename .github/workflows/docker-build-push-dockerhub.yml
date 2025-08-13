@@ -50,7 +50,7 @@ jobs:
       #     ref: ${{ github.event.inputs.version }}
 
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Git submodule update
         run: |
