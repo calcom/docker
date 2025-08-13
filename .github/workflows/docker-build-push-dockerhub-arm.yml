@@ -84,10 +84,10 @@ jobs:
           # Add flavor latest only on full releases, not on pre-releases
           flavor: |
             latest=false
-            suffix=arm
+            suffix=-test-arm
           # flavor: |
           #   latest=${{ !github.event.release.prerelease }}
-          #   suffix=test-arm
+          #   suffix=-arm
 
       - name: Copy env
         run: |
