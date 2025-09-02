@@ -71,7 +71,9 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     Update the appropriate values in your .env file, then proceed.
 
-4. (optional) Pre-Pull the images by running the following command:
+    For a more complete list of environment variable options please take a look at the Calcom core [.env.example](https://github.com/calcom/cal.com/blob/main/.env.example) and [Calcom documentation](https://cal.com/docs/self-hosting/installation).
+
+5. (optional) Pre-Pull the images by running the following command:
 
     ```bash
     docker compose pull
@@ -81,7 +83,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     Note: To aid with support, by default Scarf.sh is used as registry proxy for download metrics.
 
-5. Start Cal.com via docker compose
+6. Start Cal.com via docker compose
 
     (Most basic users, and for First Run) To run the complete stack, which includes a local Postgres database, Cal.com web app, and Prisma Studio:
 
@@ -103,7 +105,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     **Note: to run in attached mode for debugging, remove `-d` from your desired run command.**
 
-6. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
+7. Open a browser to [http://localhost:3000](http://localhost:3000), or your defined NEXT_PUBLIC_WEBAPP_URL. The first time you run Cal.com, a setup wizard will initialize. Define your first user, and you're ready to go!
 
 ## Updating Cal.com
 
@@ -276,3 +278,4 @@ docker-calcom-1  | @calcom/web:start: }
 
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
+
