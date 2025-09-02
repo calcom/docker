@@ -30,7 +30,8 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     NEXT_PUBLIC_SINGLE_ORG_SLUG=$NEXT_PUBLIC_SINGLE_ORG_SLUG \
     ORGANIZATIONS_ENABLED=$ORGANIZATIONS_ENABLED \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE} \
-    BUILD_STANDALONE=true
+    BUILD_STANDALONE=true \
+    CSP_POLICY=$CSP_POLICY
 
 COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/i18n.json ./
 COPY calcom/.yarn ./.yarn
@@ -90,3 +91,4 @@ HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
     CMD wget --spider http://localhost:3000 || exit 1
 
 CMD ["/calcom/scripts/start.sh"]
+
