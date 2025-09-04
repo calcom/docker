@@ -37,7 +37,7 @@ COPY calcom/.yarn ./.yarn
 COPY calcom/apps/web ./apps/web
 COPY calcom/apps/api/v2 ./apps/api/v2
 COPY calcom/packages ./packages
-COPY calcom/tests ./tests
+
 
 RUN yarn config set httpTimeout 1200000
 RUN npx turbo prune --scope=@calcom/web --scope=@calcom/trpc --docker
@@ -90,3 +90,4 @@ HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
     CMD wget --spider http://localhost:3000 || exit 1
 
 CMD ["/calcom/scripts/start.sh"]
+
