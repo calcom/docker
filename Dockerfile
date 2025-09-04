@@ -32,11 +32,7 @@ ENV NEXT_PUBLIC_WEBAPP_URL=http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER \
     NODE_OPTIONS=--max-old-space-size=${MAX_OLD_SPACE_SIZE} \
     BUILD_STANDALONE=true
 
-COPY calcom/package.json calcom/yarn.lock calcom/.yarnrc.yml calcom/playwright.config.ts calcom/turbo.json calcom/i18n.json ./
-COPY calcom/.yarn ./.yarn
-COPY calcom/apps/web ./apps/web
-COPY calcom/apps/api/v2 ./apps/api/v2
-COPY calcom/packages ./packages
+
 
 
 RUN yarn config set httpTimeout 1200000
@@ -90,4 +86,5 @@ HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
     CMD wget --spider http://localhost:3000 || exit 1
 
 CMD ["/calcom/scripts/start.sh"]
+
 
