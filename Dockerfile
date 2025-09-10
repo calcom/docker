@@ -1,18 +1,31 @@
-FROM --platform=$BUILDPLATFORM node:18 AS builder
+FROM --platform=$BUILDPLATFORM node:20 AS builder
 
 WORKDIR /calcom
 
 ## If we want to read any ENV variable from .env file, we need to first accept and pass it as an argument to the Dockerfile
-ARG NEXT_PUBLIC_LICENSE_CONSENT
-ARG NEXT_PUBLIC_WEBSITE_TERMS_URL
-ARG NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL
-ARG CALCOM_TELEMETRY_DISABLED
+
+# Required at Build
+# # Currently required but work is in progress to remove requirement of a database at build time
 ARG DATABASE_URL
+# # Needed for Nodejs/NPM build options
+ARG MAX_OLD_SPACE_SIZE=4096
+# # Required to be embedded
+ARG NEXT_PUBLIC_LICENSE_CONSENT
+# Required at Buildtime and Runtime
 ARG NEXTAUTH_SECRET=secret
 ARG CALENDSO_ENCRYPTION_KEY=secret
-ARG MAX_OLD_SPACE_SIZE=4096
+
+# Required at Runtime
+ARG NEXT_PUBLIC_WEBSITE_TERMS_URL
+ARG NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL
+# # Use of API v2 is only required for the use of Cal.com/platform or for custom integrations
+# # Not required for air-gapped
+# # Required if using Platform
 ARG NEXT_PUBLIC_API_V2_URL
 
+# Optional
+ARG CALCOM_TELEMETRY_DISABLED
+# # Required for Organization functionality/features
 ## We need these variables as required by Next.js build to create rewrites
 ARG NEXT_PUBLIC_SINGLE_ORG_SLUG
 ARG ORGANIZATIONS_ENABLED
@@ -90,3 +103,4 @@ HEALTHCHECK --interval=30s --timeout=30s --retries=5 \
     CMD wget --spider http://localhost:3000 || exit 1
 
 CMD ["/calcom/scripts/start.sh"]
+
