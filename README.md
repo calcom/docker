@@ -29,7 +29,7 @@
 
 This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com](https://hub.docker.com/r/calcom/cal.com). 
 
-**Note for ARM builds**: you will have too use the {version}-arm suffix. For example you can pull down an ARM image with a `docker pull` command like `docker pull calcom/cal.com:v5.6.19-arm`
+**Note for ARM Users**: Use the {version}-arm suffix for pulling images. Example: `docker pull calcom/cal.com:v5.6.19-arm`.
 
 The Docker configuration for Cal.com is an effort powered by people within the community. Cal.com, Inc. does not yet provide official support for Docker, but we will accept fixes and documentation at this time. Use at your own risk.
 
@@ -278,4 +278,5 @@ docker-calcom-1  | @calcom/web:start: }
 
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
+
 
