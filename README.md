@@ -195,13 +195,12 @@ These variables must also be provided at runtime
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 | CALCOM_LICENSE_KEY | Enterprise License Key | optional |  |
 | NEXT_PUBLIC_WEBAPP_URL | Base URL of the site.  NOTE: if this value differs from the value used at build-time, there will be a slight delay during container start (to update the statically built files). | optional | `http://localhost:3000` |
 | NEXTAUTH_URL | Location of the auth server. By default, this is the Cal.com docker instance itself. | optional | `{NEXT_PUBLIC_WEBAPP_URL}/api/auth` |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
-| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 
 ### Build-time variables
 
@@ -211,15 +210,18 @@ Updating these variables is not required for evaluation, but is required for run
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
-| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
-| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
-| NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
-| NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
-| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
+| MAX_OLD_SPACE_SIZE | Needed for Nodejs/NPM build options | required | 4096 |
+| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false | required | |
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
+| NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
+| NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
+| NEXT_PUBLIC_API_V2_URL | URL for the v2 API, only required if you are using platform | optional | |
+| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | optional | |
+| NEXT_PUBLIC_SINGLE_ORG_SLUG | Required if ORGANIZATIONS_ENABLED is true | optional | |
+| ORGANIZATIONS_ENABLED | Used for Enterprise or Organizations plan | optional |  |
 
 ## Git Submodules
 
@@ -270,6 +272,7 @@ docker-calcom-1  | @calcom/web:start: }
 
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
+
 
 
 
