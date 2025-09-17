@@ -33,14 +33,6 @@ This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com
 
 The Docker configuration for Cal.com is an effort powered by people within the community. Cal.com, Inc. does not yet provide official support for Docker, but we will accept fixes and documentation at this time. Use at your own risk.
 
-## Important Notes
-
-This Docker Image is managed by the Cal.com Community. Join the team [here](https://github.com/calcom/docker/discussions/32). Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
-
-**Currently, this image is intended for local development/evaluation use only, as there are specific requirements for providing environmental variables at build-time in order to specify a non-localhost BASE_URL. (this is due to the nature of the static site compilation, which embeds the variable values). The ability to update these variables at runtime is in-progress and will be available in the future.**
-
-For Production, for the time being, please checkout the repository and build/push your own image privately.
-
 ## Requirements
 
 Make sure you have `docker` & `docker compose` installed on the server / system. Both are installed by most docker utilities, including Docker Desktop and Rancher Desktop.
@@ -278,6 +270,7 @@ docker-calcom-1  | @calcom/web:start: }
 
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
+
 
 
 
