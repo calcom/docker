@@ -51,7 +51,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 If you are evaluating Cal.com or running with minimal to no modifications, this option is for you.
 
-1. Clone calcom/docker. This project depends on the Cal.com source code, which is included here as a Git submodule. To make sure you get everything you need, clone the repo with the --recursive fla.
+1. Clone calcom/docker. 
 
     ```bash
     git clone --recursive https://github.com/calcom/docker.git
@@ -129,7 +129,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
 ## (Advanced users) Build and Run Cal.com
 
-1. Clone calcom/docker
+1. Clone calcom/docker.
 
     ```bash
     git clone https://github.com/calcom/docker.git calcom-docker
@@ -141,7 +141,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd calcom-docker
     ```
 
-3. Update the calcom submodule.
+3. Update the calcom submodule. This project depends on the Cal.com source code, which is included here as a Git submodule. To make sure you get everything you need, clone the repo with the --recursive flag.
 
     ```bash
     git submodule update --remote --init
@@ -278,6 +278,7 @@ docker-calcom-1  | @calcom/web:start: }
 
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
+
 
 
 
