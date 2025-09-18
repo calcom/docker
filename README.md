@@ -133,7 +133,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd calcom-docker
     ```
 
-3. Update the calcom submodule. This project depends on the Cal.com source code, which is included here as a Git submodule. To make sure you get everything you need, clone the repo with the --recursive flag.
+3. Update the calcom submodule. This project depends on the Cal.com source code, which is included here as a Git submodule. To make sure you get everything you need, update the submodule with the command below. 
 
     ```bash
     git submodule update --remote --init
@@ -269,3 +269,4 @@ docker-calcom-1  | @calcom/web:start:   url: 'http://testing.localhost:3000/api/
 docker-calcom-1  | @calcom/web:start:   message: 'request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost'
 docker-calcom-1  | @calcom/web:start: }
 ```
+
