@@ -25,6 +25,10 @@
   </p>
 </p>
 
+# Important Notes
+
+Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
+
 # Docker
 
 This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com](https://hub.docker.com/r/calcom/cal.com). 
@@ -206,7 +210,7 @@ These variables must also be provided at runtime
 
 If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com)
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [Cal.com instructions](https://github.com/calcom/cal.com)
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
@@ -218,8 +222,8 @@ Updating these variables is not required for evaluation, but is required for run
 | NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
 | NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
 | NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
-| NEXT_PUBLIC_API_V2_URL | URL for the v2 API, only required if you are using platform | optional | |
-| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | optional | |
+| NEXT_PUBLIC_API_V2_URL | URL for the v2 API, only required for custom integrations or custom booking experiences using [Cal.com Platform](https://cal.com/platform) | optional | |
+| CALCOM_TELEMETRY_DISABLED | Allow Cal.com to collect anonymous usage data (set to `1` to disable) | optional | |
 | NEXT_PUBLIC_SINGLE_ORG_SLUG | Required if ORGANIZATIONS_ENABLED is true | optional | |
 | ORGANIZATIONS_ENABLED | Used for Enterprise or Organizations plan | optional |  |
 
@@ -270,3 +274,4 @@ docker-calcom-1  | @calcom/web:start:   message: 'request to http://testing.loca
 docker-calcom-1  | @calcom/web:start: }
 ```
 
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
