@@ -49,6 +49,7 @@ services:
         CALENDSO_ENCRYPTION_KEY: ${CALENDSO_ENCRYPTION_KEY}
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
+        CSP_POLICY: ${CSP_POLICY}
     restart: always
     networks:
       - stack
@@ -132,3 +133,4 @@ services:
       - prisma
       - studio
 # END SECTION: Optional use of Prisma Studio.
+

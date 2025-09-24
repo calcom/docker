@@ -25,19 +25,17 @@
   </p>
 </p>
 
+# Important Notes
+
+Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
+
 # Docker
 
-This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com](https://hub.docker.com/r/calcom/cal.com)
+This image can be found on DockerHub at [https://hub.docker.com/r/calcom/cal.com](https://hub.docker.com/r/calcom/cal.com). 
+
+**Note for ARM Users**: Use the {version}-arm suffix for pulling images. Example: `docker pull calcom/cal.com:v5.6.19-arm`.
 
 The Docker configuration for Cal.com is an effort powered by people within the community. Cal.com, Inc. does not yet provide official support for Docker, but we will accept fixes and documentation at this time. Use at your own risk.
-
-## Important Notes
-
-This Docker Image is managed by the Cal.com Community. Join the team [here](https://github.com/calcom/docker/discussions/32). Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
-
-**Currently, this image is intended for local development/evaluation use only, as there are specific requirements for providing environmental variables at build-time in order to specify a non-localhost BASE_URL. (this is due to the nature of the static site compilation, which embeds the variable values). The ability to update these variables at runtime is in-progress and will be available in the future.**
-
-For Production, for the time being, please checkout the repository and build/push your own image privately.
 
 ## Requirements
 
@@ -49,7 +47,7 @@ Note: `docker compose` without the hyphen is now the primary method of using doc
 
 If you are evaluating Cal.com or running with minimal to no modifications, this option is for you.
 
-1. Clone calcom/docker
+1. Clone calcom/docker. 
 
     ```bash
     git clone --recursive https://github.com/calcom/docker.git
@@ -150,7 +148,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
 ## (Advanced users) Build and Run Cal.com
 
-1. Clone calcom/docker
+1. Clone calcom/docker.
 
     ```bash
     git clone https://github.com/calcom/docker.git calcom-docker
@@ -162,7 +160,7 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
     cd calcom-docker
     ```
 
-3. Update the calcom submodule.
+3. Update the calcom submodule. This project depends on the Cal.com source code, which is included here as a Git submodule. To make sure you get everything you need, update the submodule with the command below. 
 
     ```bash
     git submodule update --remote --init
@@ -224,31 +222,33 @@ These variables must also be provided at runtime
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
+| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
 | CALCOM_LICENSE_KEY | Enterprise License Key | optional |  |
 | NEXT_PUBLIC_WEBAPP_URL | Base URL of the site.  NOTE: if this value differs from the value used at build-time, there will be a slight delay during container start (to update the statically built files). | optional | `http://localhost:3000` |
 | NEXTAUTH_URL | Location of the auth server. By default, this is the Cal.com docker instance itself. | optional | `{NEXT_PUBLIC_WEBAPP_URL}/api/auth` |
 | NEXTAUTH_SECRET | must match build variable | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | must match build variable | required | `secret` |
-| DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
 
 ### Build-time variables
 
 If building the image yourself, these variables must be provided at the time of the docker build, and can be provided by updating the .env file. Currently, if you require changes to these variables, you must follow the instructions to build and publish your own image.
 
-Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [cal.com instructions](https://github.com/calcom/cal.com)
+Updating these variables is not required for evaluation, but is required for running in production. Instructions for generating variables can be found in the [Cal.com instructions](https://github.com/calcom/cal.com)
 
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
-| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
-| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false |  |  |
-| NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
-| NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
-| CALCOM_TELEMETRY_DISABLED | Allow cal.com to collect anonymous usage data (set to `1` to disable) | | |
 | DATABASE_URL | database url with credentials - if using a connection pooler, this setting should point there | required | `postgresql://unicorn_user:magical_password@database:5432/calendso` |
-| DATABASE_DIRECT_URL | direct database url with credentials if using a connection pooler (e.g. PgBouncer, Prisma Accelerate, etc.) | optional | |
+| MAX_OLD_SPACE_SIZE | Needed for Nodejs/NPM build options | required | 4096 |
+| NEXT_PUBLIC_LICENSE_CONSENT | license consent - true/false | required | |
 | NEXTAUTH_SECRET | Cookie encryption key | required | `secret` |
 | CALENDSO_ENCRYPTION_KEY | Authentication encryption key | required | `secret` |
+| NEXT_PUBLIC_WEBAPP_URL | Base URL injected into static files | optional | `http://localhost:3000` |
+| NEXT_PUBLIC_WEBSITE_TERMS_URL | custom URL for terms and conditions website | optional | `https://cal.com/terms` |
+| NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL | custom URL for privacy policy website | optional | `https://cal.com/privacy` |
+| NEXT_PUBLIC_API_V2_URL | URL for the v2 API, only required for custom integrations or custom booking experiences using [Cal.com Platform](https://cal.com/platform) | optional | |
+| CALCOM_TELEMETRY_DISABLED | Allow Cal.com to collect anonymous usage data (set to `1` to disable) | optional | |
+| NEXT_PUBLIC_SINGLE_ORG_SLUG | Required if ORGANIZATIONS_ENABLED is true | optional | |
+| ORGANIZATIONS_ENABLED | Used for Enterprise or Organizations plan | optional |  |
 
 ## Git Submodules
 
@@ -296,6 +296,5 @@ docker-calcom-1  | @calcom/web:start:   url: 'http://testing.localhost:3000/api/
 docker-calcom-1  | @calcom/web:start:   message: 'request to http://testing.localhost:3000/api/auth/session failed, reason: getaddrinfo ENOTFOUND testing.localhost'
 docker-calcom-1  | @calcom/web:start: }
 ```
-
 
 <img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=81cda9f7-a102-453b-ac01-51c35650bd70" />
