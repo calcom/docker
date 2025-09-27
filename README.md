@@ -67,6 +67,29 @@ If you are evaluating Cal.com or running with minimal to no modifications, this 
 
     Most configurations can be left as-is, but for configuration options see [Important Run-time variables](#important-run-time-variables) below.
 
+    **Push Notifications (VAPID Keys)**  
+    If you see an error like:
+
+    ```
+    Error: No key set vapidDetails.publicKey
+    ```
+
+    This means your environment variables for Web Push are missing.  
+    You must generate and set `NEXT_PUBLIC_VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`.
+
+    Generate them with:
+    ```bash
+    npx web-push generate-vapid-keys
+    ```
+
+    Then update your `.env` file:
+    ```env
+    NEXT_PUBLIC_VAPID_PUBLIC_KEY=your_public_key_here
+    VAPID_PRIVATE_KEY=your_private_key_here
+    ```
+
+    Do **not** commit real keys to `.env.example` — only placeholders.
+
     Update the appropriate values in your .env file, then proceed.
 
 4. (optional) Pre-Pull the images by running the following command:
