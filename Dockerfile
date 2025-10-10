@@ -77,6 +77,10 @@ RUN scripts/replace-placeholder.sh http://NEXT_PUBLIC_WEBAPP_URL_PLACEHOLDER ${N
 
 FROM node:18 AS runner
 
+RUN apt-get update \
+    && apt-get install -y netcat-openbsd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /calcom
 COPY --from=builder-two /calcom ./
