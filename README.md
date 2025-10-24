@@ -5,7 +5,7 @@
 
   </a>
 
-  <h3 align="center">Cal.com (formerly Calendso)</h3>
+  <h3 align="center">Cal.com</h3>
 
   <p align="center">
     The open-source Calendly alternative. (Docker Edition)
@@ -18,8 +18,6 @@
     <a href="https://cal.com">Website</a>
     ·
     <a href="https://github.com/calcom/cal.com/issues">Core Cal.com related Issues</a>
-    ·
-    <a href="https://github.com/calcom/docker/issues">Docker specific Issues</a>
     ·
     <a href="https://cal.com/roadmap">Roadmap</a>
   </p>
@@ -35,10 +33,5 @@
 
 - **Docker resources are now maintained in the main Cal.com repository**: All Dockerfile and docker-compose configurations are now part of the [calcom/cal.com](https://github.com/calcom/cal.com) monorepo.
 - **Official support**: Our team will begin to officially support the Dockerfile and docker-compose resources in the main repository.
-- **Important**: Cal.com will **not** be supporting installations that use these Docker resources. While we provide and maintain the Docker configurations, support for Docker-based installations is community-driven.
+- **Important**: Cal.com will **not** be supporting installations that use these Docker resources. While we provide and maintain the Docker configurations, support for Docker-based installations is the responsibility of the user.
 
-## Where to Go
-
-For the latest Docker resources and documentation, please visit:
-- **Main Repository**: [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com)
-- **Docker Documentation**: Refer to the Docker setup instructions in the main repository
