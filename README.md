@@ -25,6 +25,26 @@
   </p>
 </p>
 
+---
+
+# 🚨 REPOSITORY ARCHIVED
+
+**This repository has been archived.** Docker resources for Cal.com have been moved into the main monorepo at [calcom/cal.com](https://github.com/calcom/cal.com).
+
+## What This Means
+
+- **Docker resources are now maintained in the main Cal.com repository**: All Dockerfile and docker-compose configurations are now part of the [calcom/cal.com](https://github.com/calcom/cal.com) monorepo.
+- **Official support**: Our team will begin to officially support the Dockerfile and docker-compose resources in the main repository.
+- **Important**: Cal.com will **not** be supporting installations that use these Docker resources. While we provide and maintain the Docker configurations, support for Docker-based installations is community-driven.
+
+## Where to Go
+
+For the latest Docker resources and documentation, please visit:
+- **Main Repository**: [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com)
+- **Docker Documentation**: Refer to the Docker setup instructions in the main repository
+
+---
+
 # Important Notes
 
 Support for this image can be found via the repository, located at [https://github.com/calcom/docker](https://github.com/calcom/docker)
